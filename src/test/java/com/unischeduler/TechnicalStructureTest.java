@@ -19,6 +19,7 @@ class TechnicalStructureTest {
         .layer("Config").definedBy("..config..")
         .layer("Web").definedBy("..web..")
         .optionalLayer("Service").definedBy("..service..")
+        .optionalLayer("Solver").definedBy("..solver..")
         .layer("Security").definedBy("..security..")
         .optionalLayer("Persistence").definedBy("..repository..")
         .layer("Domain").definedBy("..domain..")
@@ -26,9 +27,10 @@ class TechnicalStructureTest {
         .whereLayer("Config").mayNotBeAccessedByAnyLayer()
         .whereLayer("Web").mayOnlyBeAccessedByLayers("Config")
         .whereLayer("Service").mayOnlyBeAccessedByLayers("Web", "Config")
+        .whereLayer("Solver").mayOnlyBeAccessedByLayers("Service", "Web", "Config")
         .whereLayer("Security").mayOnlyBeAccessedByLayers("Config", "Service", "Web")
         .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Service", "Security", "Web", "Config")
-        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Persistence", "Service", "Security", "Web", "Config")
+        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Solver", "Persistence", "Service", "Security", "Web", "Config")
 
         .ignoreDependency(belongToAnyOf(UniSchedulerApp.class), alwaysTrue())
         .ignoreDependency(alwaysTrue(), belongToAnyOf(
