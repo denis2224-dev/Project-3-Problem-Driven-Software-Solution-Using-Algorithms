@@ -45,6 +45,12 @@ const routes: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: 'exam-schedule',
+    loadComponent: () => import('./exam-schedule/exam-schedule'),
+    title: 'Exam Schedule',
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: 'timetable-view',
     loadComponent: () => import('./timetable-view/timetable-view'),
     title: 'Weekly Timetable View',

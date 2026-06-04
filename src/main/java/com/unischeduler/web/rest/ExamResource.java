@@ -1,7 +1,9 @@
 package com.unischeduler.web.rest;
 
 import com.unischeduler.repository.ExamRepository;
+import com.unischeduler.service.ExamColoringService;
 import com.unischeduler.service.ExamService;
+import com.unischeduler.service.dto.ExamColoringResultDTO;
 import com.unischeduler.service.dto.ExamDTO;
 import com.unischeduler.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -42,9 +44,12 @@ public class ExamResource {
 
     private final ExamRepository examRepository;
 
-    public ExamResource(ExamService examService, ExamRepository examRepository) {
+    private final ExamColoringService examColoringService;
+
+    public ExamResource(ExamService examService, ExamRepository examRepository, ExamColoringService examColoringService) {
         this.examService = examService;
         this.examRepository = examRepository;
+        this.examColoringService = examColoringService;
     }
 
     /**
@@ -156,6 +161,17 @@ public class ExamResource {
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /exams/coloring} : get Welsh-Powell graph-coloring result for exam scheduling.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the coloring result.
+     */
+    @GetMapping("/coloring")
+    public ResponseEntity<ExamColoringResultDTO> getExamColoring() {
+        LOG.debug("REST request to color exam conflict graph");
+        return ResponseEntity.ok(examColoringService.colorExams());
     }
 
     /**
