@@ -1,0 +1,27 @@
+{
+  "uniSchedulerApp": {
+    "studentGroup": {
+      "home": {
+        "title": "Student Groups",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Student Group",
+        "createOrEditLabel": "Create or edit a Student Group",
+        "notFound": "No Student Groups found"
+      },
+      "created": "A new Student Group is created with identifier {{ param }}",
+      "updated": "A Student Group is updated with identifier {{ param }}",
+      "deleted": "A Student Group is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Student Group {{ id }}?"
+      },
+      "detail": {
+        "title": "Student Group"
+      },
+      "id": "ID",
+      "name": "Name",
+      "year": "Year",
+      "groupSize": "Group Size",
+      "department": "Department"
+    }
+  }
+}

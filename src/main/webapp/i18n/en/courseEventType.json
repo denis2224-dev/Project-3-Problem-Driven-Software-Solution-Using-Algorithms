@@ -1,0 +1,10 @@
+{
+  "uniSchedulerApp": {
+    "CourseEventType": {
+      "null": "",
+      "LECTURE": "LECTURE",
+      "LABORATORY": "LABORATORY",
+      "SEMINAR": "SEMINAR"
+    }
+  }
+}

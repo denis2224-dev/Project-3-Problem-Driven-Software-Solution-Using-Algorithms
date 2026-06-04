@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (course(); as courseRef) {
+      <div>
+        <h2 data-cy="courseDetailsHeading"><span jhiTranslate="uniSchedulerApp.course.detail.title">Course</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ courseRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.course.code">Code</span></dt>
+          <dd>
+            <span>{{ courseRef.code }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.course.name">Name</span></dt>
+          <dd>
+            <span>{{ courseRef.name }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.course.credits">Credits</span></dt>
+          <dd>
+            <span>{{ courseRef.credits }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.course.department">Department</span></dt>
+          <dd>
+            @if (course()!.department) {
+              <div>
+                <a [routerLink]="['/department', course()!.department?.id, 'view']">{{ courseRef.department?.name }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/course', courseRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

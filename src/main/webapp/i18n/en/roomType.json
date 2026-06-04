@@ -1,0 +1,11 @@
+{
+  "uniSchedulerApp": {
+    "RoomType": {
+      "null": "",
+      "LECTURE": "LECTURE",
+      "LABORATORY": "LABORATORY",
+      "SEMINAR": "SEMINAR",
+      "EXAM": "EXAM"
+    }
+  }
+}

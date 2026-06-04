@@ -1,0 +1,34 @@
+{
+  "annotations": {
+    "changelogDate": "20260604181209"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "dayOfWeek",
+      "fieldType": "AcademicDayOfWeek",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY"
+    },
+    {
+      "fieldName": "startTime",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "5",
+      "fieldValidateRulesMinlength": "5"
+    },
+    {
+      "fieldName": "endTime",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "5",
+      "fieldValidateRulesMinlength": "5"
+    }
+  ],
+  "name": "Timeslot",
+  "pagination": "pagination",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

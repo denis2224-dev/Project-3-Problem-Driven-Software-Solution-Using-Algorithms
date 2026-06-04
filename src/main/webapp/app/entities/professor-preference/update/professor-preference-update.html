@@ -1,0 +1,120 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-professor-preference-heading"
+        data-cy="ProfessorPreferenceCreateUpdateHeading"
+        jhiTranslate="uniSchedulerApp.professorPreference.home.createOrEditLabel"
+      >
+        Create or edit a Professor Preference
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let preferenceTypeRef = editForm.get('preferenceType')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_preferenceType" jhiTranslate="uniSchedulerApp.professorPreference.preferenceType"
+            >Preference Type</label
+          >
+          <select
+            class="form-control"
+            name="preferenceType"
+            formControlName="preferenceType"
+            id="field_preferenceType"
+            data-cy="preferenceType"
+          >
+            <option [ngValue]="null">{{ 'uniSchedulerApp.ProfessorPreferenceType.null' | translate }}</option>
+            @for (professorPreferenceType of professorPreferenceTypeValues; track $index) {
+              <option [value]="professorPreferenceType">
+                {{ 'uniSchedulerApp.ProfessorPreferenceType.' + professorPreferenceType | translate }}
+              </option>
+            }
+          </select>
+          @if (preferenceTypeRef.invalid && (preferenceTypeRef.dirty || preferenceTypeRef.touched)) {
+            <div>
+              @if (editForm.get('preferenceType')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_professor" jhiTranslate="uniSchedulerApp.professorPreference.professor">Professor</label>
+          <select
+            class="form-control"
+            id="field_professor"
+            data-cy="professor"
+            name="professor"
+            formControlName="professor"
+            [compareWith]="compareProfessor"
+          >
+            @if (!editForm.get('professor')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (professorOption of professorsSharedCollection(); track $index) {
+              <option [ngValue]="professorOption">{{ professorOption.lastName }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['professor'])!.invalid && (editForm.get(['professor'])!.dirty || editForm.get(['professor'])!.touched)) {
+          <div>
+            @if (editForm.get(['professor'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_timeslot" jhiTranslate="uniSchedulerApp.professorPreference.timeslot">Timeslot</label>
+          <select
+            class="form-control"
+            id="field_timeslot"
+            data-cy="timeslot"
+            name="timeslot"
+            formControlName="timeslot"
+            [compareWith]="compareTimeslot"
+          >
+            @if (!editForm.get('timeslot')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (timeslotOption of timeslotsSharedCollection(); track $index) {
+              <option [ngValue]="timeslotOption">{{ timeslotOption.startTime }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['timeslot'])!.invalid && (editForm.get(['timeslot'])!.dirty || editForm.get(['timeslot'])!.touched)) {
+          <div>
+            @if (editForm.get(['timeslot'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

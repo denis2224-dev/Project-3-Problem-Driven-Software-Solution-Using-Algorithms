@@ -8,7 +8,17 @@
       "entities": {
         "main": "Entities",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
-        "adminAuthority": "Authority"
+        "adminAuthority": "Authority",
+        "faculty": "Faculty",
+        "department": "Department",
+        "building": "Building",
+        "room": "Room",
+        "professor": "Professor",
+        "studentGroup": "Student Group",
+        "course": "Course",
+        "courseEvent": "Course Event",
+        "timeslot": "Timeslot",
+        "professorPreference": "Professor Preference"
       },
       "account": {
         "main": "Account",

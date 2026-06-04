@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (professor(); as professorRef) {
+      <div>
+        <h2 data-cy="professorDetailsHeading"><span jhiTranslate="uniSchedulerApp.professor.detail.title">Professor</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ professorRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.professor.firstName">First Name</span></dt>
+          <dd>
+            <span>{{ professorRef.firstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.professor.lastName">Last Name</span></dt>
+          <dd>
+            <span>{{ professorRef.lastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.professor.email">Email</span></dt>
+          <dd>
+            <span>{{ professorRef.email }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.professor.title">Title</span></dt>
+          <dd>
+            <span>{{ professorRef.title }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.professor.department">Department</span></dt>
+          <dd>
+            @if (professor()!.department) {
+              <div>
+                <a [routerLink]="['/department', professor()!.department?.id, 'view']">{{ professorRef.department?.name }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/professor', professorRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,37 @@
+{
+  "annotations": {
+    "changelogDate": "20260604181210"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "preferenceType",
+      "fieldType": "ProfessorPreferenceType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PREFERRED,UNAVAILABLE,AVOID"
+    }
+  ],
+  "name": "ProfessorPreference",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "lastName",
+      "otherEntityName": "professor",
+      "relationshipName": "professor",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "startTime",
+      "otherEntityName": "timeslot",
+      "relationshipName": "timeslot",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

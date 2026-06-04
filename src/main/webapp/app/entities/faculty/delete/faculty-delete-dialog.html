@@ -1,0 +1,24 @@
+@if (faculty) {
+  <form name="deleteForm" (ngSubmit)="confirmDelete(faculty.id!)">
+    <div class="modal-header">
+      <h4 class="modal-title" data-cy="facultyDeleteDialogHeading" jhiTranslate="entity.delete.title">Confirm delete operation</h4>
+    </div>
+
+    <div class="modal-body">
+      <jhi-alert-error />
+      <p id="jhi-delete-faculty-heading" jhiTranslate="uniSchedulerApp.faculty.delete.question" [translateValues]="{ id: faculty.id }">
+        Are you sure you want to delete Faculty {{ faculty.id }}?
+      </p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+        <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+      </button>
+
+      <button id="jhi-confirm-delete-faculty" data-cy="entityConfirmDeleteButton" type="submit" class="btn btn-danger">
+        <fa-icon icon="times" />&nbsp;<span jhiTranslate="entity.action.delete">Delete</span>
+      </button>
+    </div>
+  </form>
+}

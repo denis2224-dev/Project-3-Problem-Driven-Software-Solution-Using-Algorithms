@@ -1,0 +1,131 @@
+<div>
+  <h2 id="page-heading" data-cy="TimeslotHeading">
+    <span jhiTranslate="uniSchedulerApp.timeslot.home.title">Timeslots</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="uniSchedulerApp.timeslot.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-timeslot"
+        [routerLink]="['/timeslot/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="uniSchedulerApp.timeslot.home.createLabel">Create a new Timeslot</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (timeslots().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="uniSchedulerApp.timeslot.home.notFound">No Timeslots found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="dayOfWeek">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.timeslot.dayOfWeek">Day Of Week</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="startTime">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.timeslot.startTime">Start Time</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="endTime">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.timeslot.endTime">End Time</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (timeslot of timeslots(); track trackId(timeslot)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/timeslot', timeslot.id, 'view']">{{ timeslot.id }}</a>
+              </td>
+              <td [jhiTranslate]="'uniSchedulerApp.AcademicDayOfWeek.' + (timeslot.dayOfWeek ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    MONDAY: 'MONDAY',
+                    TUESDAY: 'TUESDAY',
+                    WEDNESDAY: 'WEDNESDAY',
+                    THURSDAY: 'THURSDAY',
+                    FRIDAY: 'FRIDAY',
+                    SATURDAY: 'SATURDAY',
+                  }[timeslot.dayOfWeek ?? 'null']
+                }}
+              </td>
+              <td>{{ timeslot.startTime }}</td>
+              <td>{{ timeslot.endTime }}</td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/timeslot', timeslot.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a [routerLink]="['/timeslot', timeslot.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(timeslot)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (timeslots().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

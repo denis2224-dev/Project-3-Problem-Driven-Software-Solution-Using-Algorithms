@@ -1,0 +1,10 @@
+{
+  "uniSchedulerApp": {
+    "ProfessorPreferenceType": {
+      "null": "",
+      "PREFERRED": "PREFERRED",
+      "UNAVAILABLE": "UNAVAILABLE",
+      "AVOID": "AVOID"
+    }
+  }
+}

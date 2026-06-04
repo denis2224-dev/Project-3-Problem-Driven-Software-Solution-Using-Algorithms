@@ -1,0 +1,64 @@
+{
+  "annotations": {
+    "changelogDate": "20260604181208"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "eventType",
+      "fieldType": "CourseEventType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "LECTURE,LABORATORY,SEMINAR"
+    },
+    {
+      "fieldName": "durationMinutes",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min", "max"],
+      "fieldValidateRulesMax": "240",
+      "fieldValidateRulesMin": "30"
+    },
+    {
+      "fieldName": "expectedStudents",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "requiredEquipment",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1000"
+    }
+  ],
+  "name": "CourseEvent",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "course",
+      "relationshipName": "course",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "lastName",
+      "otherEntityName": "professor",
+      "relationshipName": "professor",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "studentGroup",
+      "relationshipName": "studentGroup",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

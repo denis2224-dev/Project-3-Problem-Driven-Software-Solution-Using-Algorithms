@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (professorPreference(); as professorPreferenceRef) {
+      <div>
+        <h2 data-cy="professorPreferenceDetailsHeading">
+          <span jhiTranslate="uniSchedulerApp.professorPreference.detail.title">Professor Preference</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ professorPreferenceRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.professorPreference.preferenceType">Preference Type</span></dt>
+          <dd>
+            <span [jhiTranslate]="'uniSchedulerApp.ProfessorPreferenceType.' + (professorPreferenceRef.preferenceType ?? 'null')">{{
+              { null: '', PREFERRED: 'PREFERRED', UNAVAILABLE: 'UNAVAILABLE', AVOID: 'AVOID' }[
+                professorPreferenceRef.preferenceType ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.professorPreference.professor">Professor</span></dt>
+          <dd>
+            @if (professorPreference()!.professor) {
+              <div>
+                <a [routerLink]="['/professor', professorPreference()!.professor?.id, 'view']">{{
+                  professorPreferenceRef.professor?.lastName
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.professorPreference.timeslot">Timeslot</span></dt>
+          <dd>
+            @if (professorPreference()!.timeslot) {
+              <div>
+                <a [routerLink]="['/timeslot', professorPreference()!.timeslot?.id, 'view']">{{
+                  professorPreferenceRef.timeslot?.startTime
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/professor-preference', professorPreferenceRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

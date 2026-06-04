@@ -1,0 +1,72 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (courseEvent(); as courseEventRef) {
+      <div>
+        <h2 data-cy="courseEventDetailsHeading"><span jhiTranslate="uniSchedulerApp.courseEvent.detail.title">Course Event</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ courseEventRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.courseEvent.eventType">Event Type</span></dt>
+          <dd>
+            <span [jhiTranslate]="'uniSchedulerApp.CourseEventType.' + (courseEventRef.eventType ?? 'null')">{{
+              { null: '', LECTURE: 'LECTURE', LABORATORY: 'LABORATORY', SEMINAR: 'SEMINAR' }[courseEventRef.eventType ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.courseEvent.durationMinutes">Duration Minutes</span></dt>
+          <dd>
+            <span>{{ courseEventRef.durationMinutes }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.courseEvent.expectedStudents">Expected Students</span></dt>
+          <dd>
+            <span>{{ courseEventRef.expectedStudents }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.courseEvent.requiredEquipment">Required Equipment</span></dt>
+          <dd>
+            <span>{{ courseEventRef.requiredEquipment }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.courseEvent.course">Course</span></dt>
+          <dd>
+            @if (courseEvent()!.course) {
+              <div>
+                <a [routerLink]="['/course', courseEvent()!.course?.id, 'view']">{{ courseEventRef.course?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.courseEvent.professor">Professor</span></dt>
+          <dd>
+            @if (courseEvent()!.professor) {
+              <div>
+                <a [routerLink]="['/professor', courseEvent()!.professor?.id, 'view']">{{ courseEventRef.professor?.lastName }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.courseEvent.studentGroup">Student Group</span></dt>
+          <dd>
+            @if (courseEvent()!.studentGroup) {
+              <div>
+                <a [routerLink]="['/student-group', courseEvent()!.studentGroup?.id, 'view']">{{ courseEventRef.studentGroup?.name }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/course-event', courseEventRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

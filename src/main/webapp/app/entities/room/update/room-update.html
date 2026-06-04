@@ -1,0 +1,155 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-room-heading" data-cy="RoomCreateUpdateHeading" jhiTranslate="uniSchedulerApp.room.home.createOrEditLabel">
+        Create or edit a Room
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let nameRef = editForm.get('name')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_name" jhiTranslate="uniSchedulerApp.room.name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
+            <div>
+              @if (editForm.get('name')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('name')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '120' }"
+                  >This field cannot be longer than 120 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let codeRef = editForm.get('code')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_code" jhiTranslate="uniSchedulerApp.room.code">Code</label>
+          <input type="text" class="form-control" name="code" id="field_code" data-cy="code" formControlName="code" />
+          @if (codeRef.invalid && (codeRef.dirty || codeRef.touched)) {
+            <div>
+              @if (editForm.get('code')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('code')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '30' }"
+                  >This field cannot be longer than 30 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let capacityRef = editForm.get('capacity')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_capacity" jhiTranslate="uniSchedulerApp.room.capacity">Capacity</label>
+          <input type="number" class="form-control" name="capacity" id="field_capacity" data-cy="capacity" formControlName="capacity" />
+          @if (capacityRef.invalid && (capacityRef.dirty || capacityRef.touched)) {
+            <div>
+              @if (editForm.get('capacity')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('capacity')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '1' }"
+                  >This field should be at least 1.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('capacity')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let roomTypeRef = editForm.get('roomType')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_roomType" jhiTranslate="uniSchedulerApp.room.roomType">Room Type</label>
+          <select class="form-control" name="roomType" formControlName="roomType" id="field_roomType" data-cy="roomType">
+            <option [ngValue]="null">{{ 'uniSchedulerApp.RoomType.null' | translate }}</option>
+            @for (roomType of roomTypeValues; track $index) {
+              <option [value]="roomType">{{ 'uniSchedulerApp.RoomType.' + roomType | translate }}</option>
+            }
+          </select>
+          @if (roomTypeRef.invalid && (roomTypeRef.dirty || roomTypeRef.touched)) {
+            <div>
+              @if (editForm.get('roomType')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let equipmentRef = editForm.get('equipment')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_equipment" jhiTranslate="uniSchedulerApp.room.equipment">Equipment</label>
+          <input type="text" class="form-control" name="equipment" id="field_equipment" data-cy="equipment" formControlName="equipment" />
+          @if (equipmentRef.invalid && (equipmentRef.dirty || equipmentRef.touched)) {
+            <div>
+              @if (editForm.get('equipment')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '1000' }"
+                  >This field cannot be longer than 1000 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_building" jhiTranslate="uniSchedulerApp.room.building">Building</label>
+          <select
+            class="form-control"
+            id="field_building"
+            data-cy="building"
+            name="building"
+            formControlName="building"
+            [compareWith]="compareBuilding"
+          >
+            @if (!editForm.get('building')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (buildingOption of buildingsSharedCollection(); track $index) {
+              <option [ngValue]="buildingOption">{{ buildingOption.name }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['building'])!.invalid && (editForm.get(['building'])!.dirty || editForm.get(['building'])!.touched)) {
+          <div>
+            @if (editForm.get(['building'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

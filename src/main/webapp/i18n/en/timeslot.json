@@ -1,0 +1,26 @@
+{
+  "uniSchedulerApp": {
+    "timeslot": {
+      "home": {
+        "title": "Timeslots",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Timeslot",
+        "createOrEditLabel": "Create or edit a Timeslot",
+        "notFound": "No Timeslots found"
+      },
+      "created": "A new Timeslot is created with identifier {{ param }}",
+      "updated": "A Timeslot is updated with identifier {{ param }}",
+      "deleted": "A Timeslot is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Timeslot {{ id }}?"
+      },
+      "detail": {
+        "title": "Timeslot"
+      },
+      "id": "ID",
+      "dayOfWeek": "Day Of Week",
+      "startTime": "Start Time",
+      "endTime": "End Time"
+    }
+  }
+}

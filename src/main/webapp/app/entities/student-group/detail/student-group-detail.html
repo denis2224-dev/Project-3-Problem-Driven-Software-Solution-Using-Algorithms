@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (studentGroup(); as studentGroupRef) {
+      <div>
+        <h2 data-cy="studentGroupDetailsHeading"><span jhiTranslate="uniSchedulerApp.studentGroup.detail.title">Student Group</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ studentGroupRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.studentGroup.name">Name</span></dt>
+          <dd>
+            <span>{{ studentGroupRef.name }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.studentGroup.year">Year</span></dt>
+          <dd>
+            <span>{{ studentGroupRef.year }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.studentGroup.groupSize">Group Size</span></dt>
+          <dd>
+            <span>{{ studentGroupRef.groupSize }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.studentGroup.department">Department</span></dt>
+          <dd>
+            @if (studentGroup()!.department) {
+              <div>
+                <a [routerLink]="['/department', studentGroup()!.department?.id, 'view']">{{ studentGroupRef.department?.name }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/student-group', studentGroupRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

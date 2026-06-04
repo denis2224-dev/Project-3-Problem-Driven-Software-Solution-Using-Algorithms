@@ -1,0 +1,104 @@
+enum RoomType {
+  LECTURE,
+  LABORATORY,
+  SEMINAR,
+  EXAM
+}
+
+enum CourseEventType {
+  LECTURE,
+  LABORATORY,
+  SEMINAR
+}
+
+enum AcademicDayOfWeek {
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY
+}
+
+enum ProfessorPreferenceType {
+  PREFERRED,
+  UNAVAILABLE,
+  AVOID
+}
+
+entity Faculty {
+  name String required maxlength(120)
+  code String required maxlength(20)
+}
+
+entity Department {
+  name String required maxlength(120)
+  code String required maxlength(20)
+}
+
+entity Building {
+  name String required maxlength(120)
+  code String required maxlength(20)
+  address String maxlength(255)
+}
+
+entity Room {
+  name String required maxlength(120)
+  code String required maxlength(30)
+  capacity Integer required min(1)
+  roomType RoomType required
+  equipment String maxlength(1000)
+}
+
+entity Professor {
+  firstName String required maxlength(80)
+  lastName String required maxlength(80)
+  email String required maxlength(160)
+  title String maxlength(80)
+}
+
+entity StudentGroup {
+  name String required maxlength(80)
+  year Integer required min(1) max(6)
+  groupSize Integer required min(1)
+}
+
+entity Course {
+  code String required maxlength(30)
+  name String required maxlength(160)
+  credits Integer required min(1) max(30)
+}
+
+entity CourseEvent {
+  eventType CourseEventType required
+  durationMinutes Integer required min(30) max(240)
+  expectedStudents Integer required min(1)
+  requiredEquipment String maxlength(1000)
+}
+
+entity Timeslot {
+  dayOfWeek AcademicDayOfWeek required
+  startTime String required minlength(5) maxlength(5)
+  endTime String required minlength(5) maxlength(5)
+}
+
+entity ProfessorPreference {
+  preferenceType ProfessorPreferenceType required
+}
+
+relationship ManyToOne {
+  Department{faculty(name) required} to Faculty
+  Room{building(name) required} to Building
+  Professor{department(name) required} to Department
+  StudentGroup{department(name) required} to Department
+  Course{department(name) required} to Department
+  CourseEvent{course(name) required} to Course
+  CourseEvent{professor(lastName) required} to Professor
+  CourseEvent{studentGroup(name) required} to StudentGroup
+  ProfessorPreference{professor(lastName) required} to Professor
+  ProfessorPreference{timeslot(startTime) required} to Timeslot
+}
+
+dto Faculty, Department, Building, Room, Professor, StudentGroup, Course, CourseEvent, Timeslot, ProfessorPreference with mapstruct
+service Faculty, Department, Building, Room, Professor, StudentGroup, Course, CourseEvent, Timeslot, ProfessorPreference with serviceClass
+paginate Faculty, Department, Building, Room, Professor, StudentGroup, Course, CourseEvent, Timeslot, ProfessorPreference with pagination

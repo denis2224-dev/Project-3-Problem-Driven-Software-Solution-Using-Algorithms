@@ -1,0 +1,168 @@
+<div>
+  <h2 id="page-heading" data-cy="CourseEventHeading">
+    <span jhiTranslate="uniSchedulerApp.courseEvent.home.title">Course Events</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="uniSchedulerApp.courseEvent.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-course-event"
+        [routerLink]="['/course-event/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="uniSchedulerApp.courseEvent.home.createLabel">Create a new Course Event</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (courseEvents().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="uniSchedulerApp.courseEvent.home.notFound">No Course Events found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="eventType">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.courseEvent.eventType">Event Type</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="durationMinutes">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.courseEvent.durationMinutes">Duration Minutes</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="expectedStudents">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.courseEvent.expectedStudents">Expected Students</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="requiredEquipment">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.courseEvent.requiredEquipment">Required Equipment</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="course.name">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.courseEvent.course">Course</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="professor.lastName">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.courseEvent.professor">Professor</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="studentGroup.name">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.courseEvent.studentGroup">Student Group</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (courseEvent of courseEvents(); track trackId(courseEvent)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/course-event', courseEvent.id, 'view']">{{ courseEvent.id }}</a>
+              </td>
+              <td [jhiTranslate]="'uniSchedulerApp.CourseEventType.' + (courseEvent.eventType ?? 'null')">
+                {{ { null: '', LECTURE: 'LECTURE', LABORATORY: 'LABORATORY', SEMINAR: 'SEMINAR' }[courseEvent.eventType ?? 'null'] }}
+              </td>
+              <td>{{ courseEvent.durationMinutes }}</td>
+              <td>{{ courseEvent.expectedStudents }}</td>
+              <td>{{ courseEvent.requiredEquipment }}</td>
+              <td>
+                @if (courseEvent.course) {
+                  <div>
+                    <a [routerLink]="['/course', courseEvent.course.id, 'view']">{{ courseEvent.course.name }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (courseEvent.professor) {
+                  <div>
+                    <a [routerLink]="['/professor', courseEvent.professor.id, 'view']">{{ courseEvent.professor.lastName }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (courseEvent.studentGroup) {
+                  <div>
+                    <a [routerLink]="['/student-group', courseEvent.studentGroup.id, 'view']">{{ courseEvent.studentGroup.name }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/course-event', courseEvent.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a [routerLink]="['/course-event', courseEvent.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(courseEvent)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (courseEvents().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

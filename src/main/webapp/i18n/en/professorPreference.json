@@ -1,0 +1,26 @@
+{
+  "uniSchedulerApp": {
+    "professorPreference": {
+      "home": {
+        "title": "Professor Preferences",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Professor Preference",
+        "createOrEditLabel": "Create or edit a Professor Preference",
+        "notFound": "No Professor Preferences found"
+      },
+      "created": "A new Professor Preference is created with identifier {{ param }}",
+      "updated": "A Professor Preference is updated with identifier {{ param }}",
+      "deleted": "A Professor Preference is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Professor Preference {{ id }}?"
+      },
+      "detail": {
+        "title": "Professor Preference"
+      },
+      "id": "ID",
+      "preferenceType": "Preference Type",
+      "professor": "Professor",
+      "timeslot": "Timeslot"
+    }
+  }
+}

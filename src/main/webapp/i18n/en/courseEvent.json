@@ -1,0 +1,30 @@
+{
+  "uniSchedulerApp": {
+    "courseEvent": {
+      "home": {
+        "title": "Course Events",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Course Event",
+        "createOrEditLabel": "Create or edit a Course Event",
+        "notFound": "No Course Events found"
+      },
+      "created": "A new Course Event is created with identifier {{ param }}",
+      "updated": "A Course Event is updated with identifier {{ param }}",
+      "deleted": "A Course Event is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Course Event {{ id }}?"
+      },
+      "detail": {
+        "title": "Course Event"
+      },
+      "id": "ID",
+      "eventType": "Event Type",
+      "durationMinutes": "Duration Minutes",
+      "expectedStudents": "Expected Students",
+      "requiredEquipment": "Required Equipment",
+      "course": "Course",
+      "professor": "Professor",
+      "studentGroup": "Student Group"
+    }
+  }
+}

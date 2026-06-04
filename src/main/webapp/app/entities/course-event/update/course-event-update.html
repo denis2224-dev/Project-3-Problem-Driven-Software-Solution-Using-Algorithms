@@ -1,0 +1,233 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-course-event-heading"
+        data-cy="CourseEventCreateUpdateHeading"
+        jhiTranslate="uniSchedulerApp.courseEvent.home.createOrEditLabel"
+      >
+        Create or edit a Course Event
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let eventTypeRef = editForm.get('eventType')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_eventType" jhiTranslate="uniSchedulerApp.courseEvent.eventType">Event Type</label>
+          <select class="form-control" name="eventType" formControlName="eventType" id="field_eventType" data-cy="eventType">
+            <option [ngValue]="null">{{ 'uniSchedulerApp.CourseEventType.null' | translate }}</option>
+            @for (courseEventType of courseEventTypeValues; track $index) {
+              <option [value]="courseEventType">{{ 'uniSchedulerApp.CourseEventType.' + courseEventType | translate }}</option>
+            }
+          </select>
+          @if (eventTypeRef.invalid && (eventTypeRef.dirty || eventTypeRef.touched)) {
+            <div>
+              @if (editForm.get('eventType')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let durationMinutesRef = editForm.get('durationMinutes')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_durationMinutes" jhiTranslate="uniSchedulerApp.courseEvent.durationMinutes"
+            >Duration Minutes</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="durationMinutes"
+            id="field_durationMinutes"
+            data-cy="durationMinutes"
+            formControlName="durationMinutes"
+          />
+          @if (durationMinutesRef.invalid && (durationMinutesRef.dirty || durationMinutesRef.touched)) {
+            <div>
+              @if (editForm.get('durationMinutes')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('durationMinutes')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '30' }"
+                  >This field should be at least 30.</small
+                >
+              }
+              @if (editForm.get('durationMinutes')?.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '240' }"
+                  >This field cannot be more than 240.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('durationMinutes')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let expectedStudentsRef = editForm.get('expectedStudents')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_expectedStudents" jhiTranslate="uniSchedulerApp.courseEvent.expectedStudents"
+            >Expected Students</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="expectedStudents"
+            id="field_expectedStudents"
+            data-cy="expectedStudents"
+            formControlName="expectedStudents"
+          />
+          @if (expectedStudentsRef.invalid && (expectedStudentsRef.dirty || expectedStudentsRef.touched)) {
+            <div>
+              @if (editForm.get('expectedStudents')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('expectedStudents')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '1' }"
+                  >This field should be at least 1.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('expectedStudents')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let requiredEquipmentRef = editForm.get('requiredEquipment')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_requiredEquipment" jhiTranslate="uniSchedulerApp.courseEvent.requiredEquipment"
+            >Required Equipment</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="requiredEquipment"
+            id="field_requiredEquipment"
+            data-cy="requiredEquipment"
+            formControlName="requiredEquipment"
+          />
+          @if (requiredEquipmentRef.invalid && (requiredEquipmentRef.dirty || requiredEquipmentRef.touched)) {
+            <div>
+              @if (editForm.get('requiredEquipment')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '1000' }"
+                  >This field cannot be longer than 1000 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_course" jhiTranslate="uniSchedulerApp.courseEvent.course">Course</label>
+          <select
+            class="form-control"
+            id="field_course"
+            data-cy="course"
+            name="course"
+            formControlName="course"
+            [compareWith]="compareCourse"
+          >
+            @if (!editForm.get('course')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (courseOption of coursesSharedCollection(); track $index) {
+              <option [ngValue]="courseOption">{{ courseOption.name }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['course'])!.invalid && (editForm.get(['course'])!.dirty || editForm.get(['course'])!.touched)) {
+          <div>
+            @if (editForm.get(['course'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_professor" jhiTranslate="uniSchedulerApp.courseEvent.professor">Professor</label>
+          <select
+            class="form-control"
+            id="field_professor"
+            data-cy="professor"
+            name="professor"
+            formControlName="professor"
+            [compareWith]="compareProfessor"
+          >
+            @if (!editForm.get('professor')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (professorOption of professorsSharedCollection(); track $index) {
+              <option [ngValue]="professorOption">{{ professorOption.lastName }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['professor'])!.invalid && (editForm.get(['professor'])!.dirty || editForm.get(['professor'])!.touched)) {
+          <div>
+            @if (editForm.get(['professor'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_studentGroup" jhiTranslate="uniSchedulerApp.courseEvent.studentGroup">Student Group</label>
+          <select
+            class="form-control"
+            id="field_studentGroup"
+            data-cy="studentGroup"
+            name="studentGroup"
+            formControlName="studentGroup"
+            [compareWith]="compareStudentGroup"
+          >
+            @if (!editForm.get('studentGroup')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (studentGroupOption of studentGroupsSharedCollection(); track $index) {
+              <option [ngValue]="studentGroupOption">{{ studentGroupOption.name }}</option>
+            }
+          </select>
+        </div>
+        @if (
+          editForm.get(['studentGroup'])!.invalid && (editForm.get(['studentGroup'])!.dirty || editForm.get(['studentGroup'])!.touched)
+        ) {
+          <div>
+            @if (editForm.get(['studentGroup'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

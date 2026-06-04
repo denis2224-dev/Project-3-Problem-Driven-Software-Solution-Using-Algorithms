@@ -1,0 +1,100 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-timeslot-heading" data-cy="TimeslotCreateUpdateHeading" jhiTranslate="uniSchedulerApp.timeslot.home.createOrEditLabel">
+        Create or edit a Timeslot
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let dayOfWeekRef = editForm.get('dayOfWeek')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_dayOfWeek" jhiTranslate="uniSchedulerApp.timeslot.dayOfWeek">Day Of Week</label>
+          <select class="form-control" name="dayOfWeek" formControlName="dayOfWeek" id="field_dayOfWeek" data-cy="dayOfWeek">
+            <option [ngValue]="null">{{ 'uniSchedulerApp.AcademicDayOfWeek.null' | translate }}</option>
+            @for (academicDayOfWeek of academicDayOfWeekValues; track $index) {
+              <option [value]="academicDayOfWeek">{{ 'uniSchedulerApp.AcademicDayOfWeek.' + academicDayOfWeek | translate }}</option>
+            }
+          </select>
+          @if (dayOfWeekRef.invalid && (dayOfWeekRef.dirty || dayOfWeekRef.touched)) {
+            <div>
+              @if (editForm.get('dayOfWeek')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let startTimeRef = editForm.get('startTime')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_startTime" jhiTranslate="uniSchedulerApp.timeslot.startTime">Start Time</label>
+          <input type="text" class="form-control" name="startTime" id="field_startTime" data-cy="startTime" formControlName="startTime" />
+          @if (startTimeRef.invalid && (startTimeRef.dirty || startTimeRef.touched)) {
+            <div>
+              @if (editForm.get('startTime')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('startTime')?.errors?.minlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: '5' }"
+                  >This field is required to be at least 5 characters.</small
+                >
+              }
+              @if (editForm.get('startTime')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '5' }"
+                  >This field cannot be longer than 5 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let endTimeRef = editForm.get('endTime')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_endTime" jhiTranslate="uniSchedulerApp.timeslot.endTime">End Time</label>
+          <input type="text" class="form-control" name="endTime" id="field_endTime" data-cy="endTime" formControlName="endTime" />
+          @if (endTimeRef.invalid && (endTimeRef.dirty || endTimeRef.touched)) {
+            <div>
+              @if (editForm.get('endTime')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('endTime')?.errors?.minlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: '5' }"
+                  >This field is required to be at least 5 characters.</small
+                >
+              }
+              @if (editForm.get('endTime')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '5' }"
+                  >This field cannot be longer than 5 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

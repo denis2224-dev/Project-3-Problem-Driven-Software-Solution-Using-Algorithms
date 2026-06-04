@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (room(); as roomRef) {
+      <div>
+        <h2 data-cy="roomDetailsHeading"><span jhiTranslate="uniSchedulerApp.room.detail.title">Room</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ roomRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.room.name">Name</span></dt>
+          <dd>
+            <span>{{ roomRef.name }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.room.code">Code</span></dt>
+          <dd>
+            <span>{{ roomRef.code }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.room.capacity">Capacity</span></dt>
+          <dd>
+            <span>{{ roomRef.capacity }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.room.roomType">Room Type</span></dt>
+          <dd>
+            <span [jhiTranslate]="'uniSchedulerApp.RoomType.' + (roomRef.roomType ?? 'null')">{{
+              { null: '', LECTURE: 'LECTURE', LABORATORY: 'LABORATORY', SEMINAR: 'SEMINAR', EXAM: 'EXAM' }[roomRef.roomType ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.room.equipment">Equipment</span></dt>
+          <dd>
+            <span>{{ roomRef.equipment }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.room.building">Building</span></dt>
+          <dd>
+            @if (room()!.building) {
+              <div>
+                <a [routerLink]="['/building', room()!.building?.id, 'view']">{{ roomRef.building?.name }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/room', roomRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

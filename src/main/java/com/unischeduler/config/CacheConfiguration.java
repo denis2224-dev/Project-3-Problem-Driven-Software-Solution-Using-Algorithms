@@ -40,6 +40,16 @@ public class CacheConfiguration {
             createCache(cm, com.unischeduler.domain.User.class.getName());
             createCache(cm, com.unischeduler.domain.Authority.class.getName());
             createCache(cm, com.unischeduler.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.unischeduler.domain.Faculty.class.getName());
+            createCache(cm, com.unischeduler.domain.Department.class.getName());
+            createCache(cm, com.unischeduler.domain.Building.class.getName());
+            createCache(cm, com.unischeduler.domain.Room.class.getName());
+            createCache(cm, com.unischeduler.domain.Professor.class.getName());
+            createCache(cm, com.unischeduler.domain.StudentGroup.class.getName());
+            createCache(cm, com.unischeduler.domain.Course.class.getName());
+            createCache(cm, com.unischeduler.domain.CourseEvent.class.getName());
+            createCache(cm, com.unischeduler.domain.Timeslot.class.getName());
+            createCache(cm, com.unischeduler.domain.ProfessorPreference.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }
