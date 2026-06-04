@@ -11,6 +11,8 @@
       <div class="hero-actions">
         @if (account() !== null) {
           <a class="neon-button primary" routerLink="/solver-job">Open solver jobs</a>
+          <a class="neon-button ghost" routerLink="/demo-scenario">Run FAF demo</a>
+          <a class="neon-button ghost" routerLink="/algorithms">Explain algorithms</a>
           <a class="neon-button ghost" routerLink="/course-event">Review course events</a>
           <a class="neon-button ghost" routerLink="/timetable-view">View weekly timetable</a>
           <button class="neon-button flat" type="button" (click)="loadDashboard()" [disabled]="loading()">

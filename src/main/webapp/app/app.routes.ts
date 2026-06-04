@@ -34,6 +34,17 @@ const routes: Routes = [
     title: 'login.title',
   },
   {
+    path: 'algorithms',
+    loadComponent: () => import('./algorithm-explanation/algorithm-explanation'),
+    title: 'Algorithm Explanation',
+  },
+  {
+    path: 'demo-scenario',
+    loadComponent: () => import('./demo-scenario/demo-scenario'),
+    title: 'FAF Demo Scenario',
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: 'timetable-view',
     loadComponent: () => import('./timetable-view/timetable-view'),
     title: 'Weekly Timetable View',
