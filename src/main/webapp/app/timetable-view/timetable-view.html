@@ -12,6 +12,11 @@
       <a class="neon-button ghost" routerLink="/solver-job">Solver jobs</a>
       @if (selectedVersion(); as version) {
         <a class="neon-button primary" [routerLink]="['/timetable-version', version.id, 'view']">Version details</a>
+        <button class="neon-button ghost" type="button" (click)="downloadCsv(version.id)">Export CSV</button>
+        @if (version.timetable?.id) {
+          <button class="neon-button flat" type="button" (click)="approveTimetable(version.timetable?.id)">Approve</button>
+          <button class="neon-button flat" type="button" (click)="publishTimetable(version.timetable?.id)">Publish</button>
+        }
       }
       <button class="neon-button flat" type="button" (click)="loadVersions()" [disabled]="loading()">
         {{ loading() ? 'Loading...' : 'Refresh' }}
@@ -33,6 +38,10 @@
 
   @if (error(); as message) {
     <div class="weekly-alert">{{ message }}</div>
+  }
+
+  @if (actionMessage(); as message) {
+    <div class="weekly-alert success">{{ message }}</div>
   }
 
   @if (versions().length === 0 && !loading()) {

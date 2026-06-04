@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -207,6 +208,30 @@ public class TimetableVersionResource {
     }
 
     /**
+     * {@code GET  /timetable-versions/:id/export/csv} : export a timetable version as CSV.
+     *
+     * @param id the id of the timetable version.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and CSV content.
+     */
+    @GetMapping(value = "/{id}/export/csv", produces = "text/csv")
+    public ResponseEntity<String> exportTimetableVersionCsv(@PathVariable("id") Long id) {
+        LOG.debug("REST request to export TimetableVersion CSV : {}", id);
+        if (!timetableVersionRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        List<SolverJobResultEntryDTO> entries = timetableEntryRepository
+            .findAllForVersionWithDetails(id)
+            .stream()
+            .map(timetableEntryResultMapper::toResultEntry)
+            .toList();
+        String csv = toCsv(entries);
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType("text/csv"))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"timetable-version-" + id + ".csv\"")
+            .body(csv);
+    }
+
+    /**
      * {@code DELETE  /timetable-versions/:id} : delete the "id" timetableVersion.
      *
      * @param id the id of the timetableVersionDTO to delete.
@@ -219,5 +244,39 @@ public class TimetableVersionResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    private String toCsv(List<SolverJobResultEntryDTO> entries) {
+        StringBuilder csv = new StringBuilder(
+            "Day,Start Time,End Time,Course Code,Course Name,Event Type,Professor,Student Group,Room,Building\n"
+        );
+        for (SolverJobResultEntryDTO entry : entries) {
+            csv.append(
+                csvRow(
+                    entry.getDayOfWeek(),
+                    entry.getStartTime(),
+                    entry.getEndTime(),
+                    entry.getCourseCode(),
+                    entry.getCourseName(),
+                    entry.getEventType(),
+                    entry.getProfessorName(),
+                    entry.getStudentGroupName(),
+                    entry.getRoomCode(),
+                    entry.getBuildingCode()
+                )
+            ).append('\n');
+        }
+        return csv.toString();
+    }
+
+    private String csvRow(String... values) {
+        return String.join(",", java.util.Arrays.stream(values).map(this::csvValue).toList());
+    }
+
+    private String csvValue(String value) {
+        if (value == null) {
+            return "";
+        }
+        return "\"" + value.replace("\"", "\"\"") + "\"";
     }
 }

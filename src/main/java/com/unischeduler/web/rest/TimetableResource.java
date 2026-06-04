@@ -1,8 +1,11 @@
 package com.unischeduler.web.rest;
 
+import com.unischeduler.domain.enumeration.TimetableStatus;
 import com.unischeduler.repository.TimetableRepository;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.service.TimetableService;
 import com.unischeduler.service.dto.TimetableDTO;
+import com.unischeduler.service.mapper.TimetableMapper;
 import com.unischeduler.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -42,9 +46,12 @@ public class TimetableResource {
 
     private final TimetableRepository timetableRepository;
 
-    public TimetableResource(TimetableService timetableService, TimetableRepository timetableRepository) {
+    private final TimetableMapper timetableMapper;
+
+    public TimetableResource(TimetableService timetableService, TimetableRepository timetableRepository, TimetableMapper timetableMapper) {
         this.timetableService = timetableService;
         this.timetableRepository = timetableRepository;
+        this.timetableMapper = timetableMapper;
     }
 
     /**
@@ -163,6 +170,32 @@ public class TimetableResource {
     }
 
     /**
+     * {@code POST  /timetables/:id/approve} : approve a generated timetable.
+     *
+     * @param id the id of the timetableDTO to approve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated timetableDTO.
+     */
+    @PostMapping("/{id}/approve")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<TimetableDTO> approveTimetable(@PathVariable("id") Long id) {
+        LOG.debug("REST request to approve Timetable : {}", id);
+        return updateTimetableStatus(id, TimetableStatus.APPROVED);
+    }
+
+    /**
+     * {@code POST  /timetables/:id/publish} : publish an approved timetable.
+     *
+     * @param id the id of the timetableDTO to publish.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated timetableDTO.
+     */
+    @PostMapping("/{id}/publish")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<TimetableDTO> publishTimetable(@PathVariable("id") Long id) {
+        LOG.debug("REST request to publish Timetable : {}", id);
+        return updateTimetableStatus(id, TimetableStatus.PUBLISHED);
+    }
+
+    /**
      * {@code DELETE  /timetables/:id} : delete the "id" timetable.
      *
      * @param id the id of the timetableDTO to delete.
@@ -175,5 +208,16 @@ public class TimetableResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    private ResponseEntity<TimetableDTO> updateTimetableStatus(Long id, TimetableStatus status) {
+        Optional<TimetableDTO> result = timetableRepository
+            .findById(id)
+            .map(timetable -> {
+                timetable.setStatus(status);
+                return timetableRepository.save(timetable);
+            })
+            .map(timetableMapper::toDto);
+        return ResponseUtil.wrapOrNotFound(result);
     }
 }

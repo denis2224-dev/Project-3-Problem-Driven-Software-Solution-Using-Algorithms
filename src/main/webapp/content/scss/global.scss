@@ -865,6 +865,12 @@ Timetable weekly view neon grid
   padding: 1rem;
 }
 
+.weekly-alert.success {
+  color: var(--uni-green);
+  border-color: rgba(57, 255, 157, 0.35);
+  background: rgba(57, 255, 157, 0.08);
+}
+
 .weekly-grid-wrap {
   overflow-x: auto;
   padding-bottom: 0.5rem;

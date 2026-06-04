@@ -57,6 +57,7 @@ export default class TimetableView implements OnInit {
   readonly entries = signal<TimetableEntryView[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly actionMessage = signal<string | null>(null);
 
   readonly selectedVersion = computed(() => this.versions().find(version => version.id === this.selectedVersionId()) ?? null);
   readonly timeRows = computed<TimeRow[]>(() => {
@@ -81,6 +82,7 @@ export default class TimetableView implements OnInit {
   loadVersions(): void {
     this.loading.set(true);
     this.error.set(null);
+    this.actionMessage.set(null);
     this.http
       .get<TimetableVersionOption[]>(this.applicationConfigService.getEndpointFor('api/timetable-versions'), {
         params: { page: 0, size: 20, sort: 'createdAt,desc', eagerload: true },
@@ -124,6 +126,39 @@ export default class TimetableView implements OnInit {
     return day.charAt(0) + day.slice(1).toLowerCase();
   }
 
+  downloadCsv(versionId: number): void {
+    this.error.set(null);
+    this.actionMessage.set(null);
+    this.http
+      .get(this.applicationConfigService.getEndpointFor(`api/timetable-versions/${versionId}/export/csv`), { responseType: 'blob' })
+      .pipe(
+        catchError(() => {
+          this.error.set('CSV export failed for the selected timetable version.');
+          return of(null);
+        }),
+      )
+      .subscribe(blob => {
+        if (!blob) {
+          return;
+        }
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `timetable-version-${versionId}.csv`;
+        link.click();
+        URL.revokeObjectURL(downloadUrl);
+        this.actionMessage.set('CSV export downloaded.');
+      });
+  }
+
+  approveTimetable(timetableId: number | null | undefined): void {
+    this.updateTimetableStatus(timetableId, 'approve');
+  }
+
+  publishTimetable(timetableId: number | null | undefined): void {
+    this.updateTimetableStatus(timetableId, 'publish');
+  }
+
   private loadEntries(versionId: number): void {
     this.loading.set(true);
     this.error.set(null);
@@ -139,6 +174,30 @@ export default class TimetableView implements OnInit {
       .subscribe(entries => {
         this.entries.set(entries);
         this.loading.set(false);
+      });
+  }
+
+  private updateTimetableStatus(timetableId: number | null | undefined, action: 'approve' | 'publish'): void {
+    if (!timetableId) {
+      this.error.set('The selected version is not linked to a timetable.');
+      return;
+    }
+    this.error.set(null);
+    this.actionMessage.set(null);
+    this.http
+      .post(this.applicationConfigService.getEndpointFor(`api/timetables/${timetableId}/${action}`), null)
+      .pipe(
+        catchError(() => {
+          this.error.set(`Timetable ${action} failed. Sign in as admin and try again.`);
+          return of(null);
+        }),
+      )
+      .subscribe(result => {
+        if (!result) {
+          return;
+        }
+        this.actionMessage.set(`Timetable ${action} completed.`);
+        this.loadVersions();
       });
   }
 
