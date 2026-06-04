@@ -1,0 +1,90 @@
+<section class="weekly-view-shell">
+  <header class="weekly-hero">
+    <div>
+      <p class="eyebrow">Stored timetable version</p>
+      <h1>Weekly timetable grid</h1>
+      <p>
+        Select a generated timetable version and inspect the persisted room-timeslot assignments produced by Welsh-Powell warm start, AC-3
+        pruning, and MAC backtracking.
+      </p>
+    </div>
+    <div class="weekly-actions">
+      <a class="neon-button ghost" routerLink="/solver-job">Solver jobs</a>
+      @if (selectedVersion(); as version) {
+        <a class="neon-button primary" [routerLink]="['/timetable-version', version.id, 'view']">Version details</a>
+      }
+      <button class="neon-button flat" type="button" (click)="loadVersions()" [disabled]="loading()">
+        {{ loading() ? 'Loading...' : 'Refresh' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="weekly-toolbar">
+    <label for="version-select">Timetable version</label>
+    <select id="version-select" class="form-select" [value]="selectedVersionId() ?? ''" (change)="selectVersion($event)">
+      @for (version of versions(); track version.id) {
+        <option [value]="version.id">
+          {{ version.timetable?.name ?? 'Timetable' }} - v{{ version.versionNumber ?? version.id }} - penalty
+          {{ version.totalSoftPenalty ?? 0 }} - conflicts {{ version.totalHardConflicts ?? 0 }}
+        </option>
+      }
+    </select>
+  </div>
+
+  @if (error(); as message) {
+    <div class="weekly-alert">{{ message }}</div>
+  }
+
+  @if (versions().length === 0 && !loading()) {
+    <article class="weekly-empty">
+      <h2>No timetable version exists yet</h2>
+      <p>Load demo data and generate a timetable from the solver jobs page, then return here to view the weekly grid.</p>
+      <a class="neon-button primary" routerLink="/solver-job">Open solver jobs</a>
+    </article>
+  } @else {
+    <div class="weekly-summary">
+      <div>
+        <span>Entries</span>
+        <strong>{{ entries().length }}</strong>
+      </div>
+      <div>
+        <span>Hard conflicts</span>
+        <strong>{{ selectedVersion()?.totalHardConflicts ?? 0 }}</strong>
+      </div>
+      <div>
+        <span>Soft penalty</span>
+        <strong>{{ selectedVersion()?.totalSoftPenalty ?? 0 }}</strong>
+      </div>
+    </div>
+
+    <div class="weekly-grid-wrap">
+      <div class="weekly-grid" [style.--day-count]="days.length">
+        <div class="grid-corner">Time</div>
+        @for (day of days; track day) {
+          <div class="day-heading">{{ formatDay(day) }}</div>
+        }
+
+        @for (row of timeRows(); track row.key) {
+          <div class="time-cell">
+            {{ row.startTime }}<span>{{ row.endTime }}</span>
+          </div>
+          @for (day of days; track day) {
+            <div class="schedule-cell">
+              @for (entry of entriesFor(day, row); track entry.timetableEntryId) {
+                <article class="event-card" [ngClass]="eventTypeClass(entry.eventType)">
+                  <div class="event-topline">
+                    <strong>{{ entry.courseCode }}</strong>
+                    <span>{{ entry.eventType }}</span>
+                  </div>
+                  <h3>{{ entry.courseName }}</h3>
+                  <p>{{ entry.professorName }}</p>
+                  <p>{{ entry.studentGroupName }} - {{ entry.roomCode }} - {{ entry.buildingCode }}</p>
+                </article>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</section>

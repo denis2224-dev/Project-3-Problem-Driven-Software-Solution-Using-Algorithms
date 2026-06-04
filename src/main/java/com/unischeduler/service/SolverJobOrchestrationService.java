@@ -1,13 +1,6 @@
 package com.unischeduler.service;
 
-import com.unischeduler.domain.Building;
-import com.unischeduler.domain.Course;
-import com.unischeduler.domain.CourseEvent;
-import com.unischeduler.domain.Professor;
-import com.unischeduler.domain.Room;
 import com.unischeduler.domain.SolverJob;
-import com.unischeduler.domain.StudentGroup;
-import com.unischeduler.domain.Timeslot;
 import com.unischeduler.domain.Timetable;
 import com.unischeduler.domain.TimetableEntry;
 import com.unischeduler.domain.TimetableVersion;
@@ -17,9 +10,9 @@ import com.unischeduler.repository.TimetableEntryRepository;
 import com.unischeduler.repository.TimetableVersionRepository;
 import com.unischeduler.service.dto.SolverJobDTO;
 import com.unischeduler.service.dto.SolverJobResultDTO;
-import com.unischeduler.service.dto.SolverJobResultEntryDTO;
 import com.unischeduler.service.dto.SolverJobStatisticsDTO;
 import com.unischeduler.service.mapper.SolverJobMapper;
+import com.unischeduler.service.mapper.TimetableEntryResultMapper;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +30,7 @@ public class SolverJobOrchestrationService {
     private final TimetableVersionRepository timetableVersionRepository;
     private final TimetableEntryRepository timetableEntryRepository;
     private final SolverJobMapper solverJobMapper;
+    private final TimetableEntryResultMapper timetableEntryResultMapper;
     private final SolverJobRunner solverJobRunner;
     private final SolverJobProgressService progressService;
 
@@ -45,6 +39,7 @@ public class SolverJobOrchestrationService {
         TimetableVersionRepository timetableVersionRepository,
         TimetableEntryRepository timetableEntryRepository,
         SolverJobMapper solverJobMapper,
+        TimetableEntryResultMapper timetableEntryResultMapper,
         SolverJobRunner solverJobRunner,
         SolverJobProgressService progressService
     ) {
@@ -52,6 +47,7 @@ public class SolverJobOrchestrationService {
         this.timetableVersionRepository = timetableVersionRepository;
         this.timetableEntryRepository = timetableEntryRepository;
         this.solverJobMapper = solverJobMapper;
+        this.timetableEntryResultMapper = timetableEntryResultMapper;
         this.solverJobRunner = solverJobRunner;
         this.progressService = progressService;
     }
@@ -115,33 +111,7 @@ public class SolverJobOrchestrationService {
         result.setTotalSoftPenalty(version.getTotalSoftPenalty());
 
         List<TimetableEntry> entries = timetableEntryRepository.findAllForVersionWithDetails(version.getId());
-        result.setEntries(entries.stream().map(this::toResultEntry).toList());
-    }
-
-    private SolverJobResultEntryDTO toResultEntry(TimetableEntry entry) {
-        CourseEvent courseEvent = entry.getCourseEvent();
-        Course course = courseEvent.getCourse();
-        Professor professor = courseEvent.getProfessor();
-        StudentGroup studentGroup = courseEvent.getStudentGroup();
-        Room room = entry.getRoom();
-        Building building = room.getBuilding();
-        Timeslot timeslot = entry.getTimeslot();
-
-        SolverJobResultEntryDTO dto = new SolverJobResultEntryDTO();
-        dto.setTimetableEntryId(entry.getId());
-        dto.setCourseCode(course.getCode());
-        dto.setCourseName(course.getName());
-        dto.setEventType(courseEvent.getEventType().name());
-        dto.setProfessorName(professor.getTitle() + " " + professor.getFirstName() + " " + professor.getLastName());
-        dto.setStudentGroupName(studentGroup.getName());
-        dto.setRoomCode(room.getCode());
-        dto.setRoomName(room.getName());
-        dto.setBuildingCode(building == null ? null : building.getCode());
-        dto.setBuildingName(building == null ? null : building.getName());
-        dto.setDayOfWeek(timeslot.getDayOfWeek().name());
-        dto.setStartTime(timeslot.getStartTime());
-        dto.setEndTime(timeslot.getEndTime());
-        return dto;
+        result.setEntries(entries.stream().map(timetableEntryResultMapper::toResultEntry).toList());
     }
 
     private SolverJobStatisticsDTO toStatistics(SolverJob job) {

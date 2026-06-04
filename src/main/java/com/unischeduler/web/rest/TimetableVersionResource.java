@@ -1,8 +1,11 @@
 package com.unischeduler.web.rest;
 
+import com.unischeduler.repository.TimetableEntryRepository;
 import com.unischeduler.repository.TimetableVersionRepository;
 import com.unischeduler.service.TimetableVersionService;
+import com.unischeduler.service.dto.SolverJobResultEntryDTO;
 import com.unischeduler.service.dto.TimetableVersionDTO;
+import com.unischeduler.service.mapper.TimetableEntryResultMapper;
 import com.unischeduler.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -42,12 +45,20 @@ public class TimetableVersionResource {
 
     private final TimetableVersionRepository timetableVersionRepository;
 
+    private final TimetableEntryRepository timetableEntryRepository;
+
+    private final TimetableEntryResultMapper timetableEntryResultMapper;
+
     public TimetableVersionResource(
         TimetableVersionService timetableVersionService,
-        TimetableVersionRepository timetableVersionRepository
+        TimetableVersionRepository timetableVersionRepository,
+        TimetableEntryRepository timetableEntryRepository,
+        TimetableEntryResultMapper timetableEntryResultMapper
     ) {
         this.timetableVersionService = timetableVersionService;
         this.timetableVersionRepository = timetableVersionRepository;
+        this.timetableEntryRepository = timetableEntryRepository;
+        this.timetableEntryResultMapper = timetableEntryResultMapper;
     }
 
     /**
@@ -173,6 +184,26 @@ public class TimetableVersionResource {
         LOG.debug("REST request to get TimetableVersion : {}", id);
         Optional<TimetableVersionDTO> timetableVersionDTO = timetableVersionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(timetableVersionDTO);
+    }
+
+    /**
+     * {@code GET  /timetable-versions/:id/entries} : get flattened timetable entries for weekly grid rendering.
+     *
+     * @param id the id of the timetable version.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the ordered entries.
+     */
+    @GetMapping("/{id}/entries")
+    public ResponseEntity<List<SolverJobResultEntryDTO>> getTimetableVersionEntries(@PathVariable("id") Long id) {
+        LOG.debug("REST request to get TimetableVersion entries : {}", id);
+        if (!timetableVersionRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        List<SolverJobResultEntryDTO> entries = timetableEntryRepository
+            .findAllForVersionWithDetails(id)
+            .stream()
+            .map(timetableEntryResultMapper::toResultEntry)
+            .toList();
+        return ResponseEntity.ok(entries);
     }
 
     /**

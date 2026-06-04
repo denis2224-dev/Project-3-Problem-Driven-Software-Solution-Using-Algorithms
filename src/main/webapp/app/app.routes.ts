@@ -34,6 +34,12 @@ const routes: Routes = [
     title: 'login.title',
   },
   {
+    path: 'timetable-view',
+    loadComponent: () => import('./timetable-view/timetable-view'),
+    title: 'Weekly Timetable View',
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: '',
     loadChildren: () => import('./entities/entity.routes'),
   },
