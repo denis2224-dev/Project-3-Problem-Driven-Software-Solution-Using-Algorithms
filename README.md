@@ -1,266 +1,206 @@
-# UniScheduler
+# Automated University Timetabling and Exam Scheduling System
 
-This application was generated using JHipster 9.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v9.1.0](https://www.jhipster.tech/documentation-archive/v9.1.0).
+University project for the course **Algorithms Analysis and Implementation**.
 
-## Project Structure
+This repository contains a working full-stack application that demonstrates how classic algorithms solve a real university scheduling problem. The system models timetable generation as a Constraint Satisfaction Problem:
 
-Node is required for generation and recommended for development. `package.json` is always generated for a better development experience with prettier, commit hooks, scripts and so on.
+```text
+P = (X, D, C)
+```
 
-In the project root, JHipster generates configuration files for tools like git, prettier, eslint, husky, and others that are well known and you can find references in the web.
+- `X`: course events and exams to schedule.
+- `D`: possible assignments, such as `(timeslot, room)`.
+- `C`: hard and soft constraints.
 
-`/src/*` structure follows default Java structure.
+Hard constraints include professor clashes, student group clashes, room double-booking, room capacity, and equipment compatibility. Soft constraints include idle gaps, professor preferences, building transitions, and schedule balance.
 
-- `.yo-rc.json` - Yeoman configuration file
-  JHipster configuration is stored in this file at `generator-jhipster` key. You may find `generator-jhipster-*` for specific blueprints configuration.
-- `.yo-resolve` (optional) - Yeoman conflict resolver
-  Allows to use a specific action when conflicts are found skipping prompts for files that matches a pattern. Each line should match `[pattern] [action]` with pattern been a [Minimatch](https://github.com/isaacs/minimatch#minimatch) pattern and action been one of skip (default if omitted) or force. Lines starting with `#` are considered comments and are ignored.
-- `.jhipster/*.json` - JHipster entity configuration files
+## Tech Stack
 
-- `npmw` - wrapper to use locally installed npm.
-  JHipster installs Node and npm locally using the build tool by default. This wrapper makes sure npm is installed locally and uses it avoiding some differences different versions can cause. By using `./npmw` instead of the traditional `npm` you can configure a Node-less environment to develop or test your application.
-- `/src/main/docker` - Docker configurations for the application and services that the application depends on
+- Backend: Java 21, Spring Boot, JHipster monolith
+- Frontend: Angular
+- Database: PostgreSQL
+- Authentication: JHipster JWT with default admin/user roles
+- Build: Maven and npm
+- Database migrations: Liquibase
+- Local infrastructure: Docker Compose
+- Architecture: Modular monolith with asynchronous solver jobs
 
-## Development
+## Architecture
 
-The build system will install automatically the recommended version of Node and npm.
+```text
+Angular Frontend
+    |
+Spring Boot REST API
+    |
+PostgreSQL Database
+    |
+Solver Job Orchestration
+    |
+Java Solver Core
+```
 
-We provide a wrapper to launch npm.
-You will only need to run this command when dependencies change in [package.json](package.json).
+The solver is not a blocking controller method. The frontend creates a solver job, the backend persists it, an asynchronous service updates job stages, and the generated result is stored as a timetable version.
+
+Solver statuses:
+
+- `CREATED`
+- `VALIDATING_INPUT`
+- `BUILDING_CONFLICT_GRAPH`
+- `RUNNING_WELCH_POWELL`
+- `RUNNING_AC3`
+- `RUNNING_BACKTRACKING`
+- `SCORING_SOFT_CONSTRAINTS`
+- `COMPLETED`
+- `FAILED`
+- `CANCELLED`
+
+## Algorithms
+
+Implemented manually in Java under `src/main/java/com/unischeduler/solver`.
+
+- Welsh-Powell graph coloring: builds a conflict graph and creates an initial timeslot coloring.
+- Backtracking search with AC-3 / MAC: assigns valid timeslot-room values while maintaining arc consistency.
+- MRV: selects the variable with the smallest remaining domain.
+- LCV: tries values that constrain neighboring variables least.
+- Soft constraint scoring: scores idle gaps, preference violations, transitions, and edge-hour pressure.
+
+Enterprise solvers such as Timefold/OptaPlanner are intentionally not used as the main solver. They are documented only as possible future benchmark comparisons.
+
+## Domain Model Summary
+
+Core academic entities:
+
+- Faculty, Department, Building, Room
+- Professor, StudentGroup, Course, CourseEvent
+- Timeslot, ProfessorPreference
+
+Scheduling entities:
+
+- SolverJob
+- Timetable, TimetableVersion, TimetableEntry
+- ScheduleConflict
+
+Exam entities:
+
+- Exam
+- ExamScheduleEntry
+
+## How To Run Locally
+
+Prerequisites:
+
+- Java 21
+- Node.js compatible with the generated JHipster version
+- Docker Desktop or Docker Engine
+- PostgreSQL through the provided Docker Compose file
+
+Start PostgreSQL:
 
 ```bash
-./npmw install
+docker compose -f src/main/docker/postgresql.yml up --wait
 ```
 
-We use npm scripts and [Angular CLI](https://angular.dev/tools/cli) with esbuild as our build system.
-
-Run the following commands in two separate terminals to create a blissful development experience where your browser
-auto-refreshes when files change on your hard drive.
+Run the backend:
 
 ```bash
-./npmw run backend:start
-./npmw run start
+./mvnw -Dskip.installnodenpm -Dskip.npm -ntp --batch-mode
 ```
 
-Npm is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
-specifying a newer version in [package.json](package.json). You can also run `./npmw update` and `./npmw install` to manage dependencies.
-Add the `help` flag on any command to see how you can use it. For example, `./npmw help update`.
-
-The `./npmw run` command will list all the scripts available to run for this project.
-
-### PWA Support
-
-JHipster ships with PWA (Progressive Web App) support, and it's turned off by default. One of the main components of a PWA is a service worker.
-
-The service worker initialization code is disabled by default. To enable it, uncomment the following code in `src/main/webapp/app/app.config.ts`:
-
-```typescript
-ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
-```
-
-### Managing dependencies
-
-For example, to add [Leaflet](https://leafletjs.com/) library as a runtime dependency of your application, you would run the following command:
+Run the frontend in another terminal:
 
 ```bash
-./npmw install --save --save-exact leaflet
+npm start
 ```
 
-To benefit from TypeScript type definitions from [DefinitelyTyped](https://definitelytyped.org/) repository in development, you would run the following command:
+Open:
+
+```text
+http://localhost:4200
+```
+
+Default JHipster accounts:
+
+- Admin: `admin` / `admin`
+- User: `user` / `user`
+
+## How To Load Demo Data
+
+Use the UI:
+
+1. Sign in as `admin`.
+2. Open `Run FAF demo` from the dashboard.
+3. Click `Load demo data`.
+
+Or call the endpoint:
 
 ```bash
-./npmw install --save-dev --save-exact @types/leaflet
+curl -X POST http://localhost:8080/api/demo-data/load \
+  -H "Authorization: Bearer <JWT>"
 ```
 
-Then you would import the JS and CSS files specified in library's installation instructions so that [esbuild][] knows about them:
-Edit [src/main/webapp/app/app.config.ts](src/main/webapp/app/app.config.ts) file:
+The demo dataset includes 1 faculty, 2 departments, 3 buildings, 10 rooms, 15 professors, 8 student groups, 20 courses, 40 course events, 30 timeslots, professor preferences, and exams.
 
-```typescript
-import 'leaflet/dist/leaflet.js';
+## How To Generate A Timetable
+
+Use the UI:
+
+1. Open `Run FAF demo`.
+2. Click `Generate timetable`.
+3. Watch the status pipeline update.
+4. Open `View weekly timetable` after completion.
+
+Main endpoint:
+
+```http
+POST /api/solver-jobs/generate-timetable
 ```
 
-Edit [src/main/webapp/content/scss/vendor.scss](src/main/webapp/content/scss/vendor.scss) file:
+Result endpoint:
 
-```typescript
-@import 'leaflet/dist/leaflet.css';
+```http
+GET /api/solver-jobs/{id}/result
 ```
 
-Note: There are still a few other things remaining to do for Leaflet that we won't detail here.
+## API Overview
 
-For further instructions on how to develop with JHipster, have a look at [Using JHipster in development](https://www.jhipster.tech/development/).
+Academic CRUD endpoints are generated by JHipster under `/api` for faculties, departments, buildings, rooms, professors, student groups, courses, course events, timeslots, and preferences.
 
-### Using Angular CLI
+Custom endpoints:
 
-You can also use [Angular CLI](https://angular.dev/tools/cli) to generate some custom client code.
+- `POST /api/demo-data/load`
+- `DELETE /api/demo-data/clear`
+- `POST /api/solver-jobs/generate-timetable`
+- `GET /api/solver-jobs/{id}/result`
+- `POST /api/solver-jobs/{id}/cancel`
+- `GET /api/solver-jobs/{id}/statistics`
+- `GET /api/timetable-versions/{id}/entries`
+- `GET /api/timetable-versions/{id}/export/csv`
+- `POST /api/timetables/{id}/approve`
+- `POST /api/timetables/{id}/publish`
+- `GET /api/exams/coloring`
 
-For example, the following command:
+## Screenshots
 
-```bash
-ng generate component my-component
-```
+Screenshots should be added before final presentation:
 
-will generate few files:
+- Dashboard
+- Demo scenario status tracker
+- Weekly timetable grid
+- Exam coloring schedule
+- Algorithm explanation page
 
-```bash
-create src/main/webapp/app/my-component/my-component.html
-create src/main/webapp/app/my-component/my-component.ts
-update src/main/webapp/app/app.config.ts
-```
+## Documentation
 
-## Building for production
+- [Architecture](docs/architecture.md)
+- [Algorithms](docs/algorithms.md)
+- [Demo Script](docs/demo-script.md)
+- [API Overview](docs/api-overview.md)
 
-### Packaging as jar
+## Future Improvements
 
-To build the final jar and optimize the UniScheduler application for production, run:
-
-```bash
-./mvnw -Pprod clean verify
-```
-
-This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
-To ensure everything worked, run:
-
-```bash
-java -jar target/*.jar
-```
-
-Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
-
-Refer to [Using JHipster in production][] for more details.
-
-### Packaging as war
-
-To package your application as a war in order to deploy it to an application server, run:
-
-```bash
-./mvnw -Pprod,war clean verify
-```
-
-### JHipster Control Center
-
-JHipster Control Center can help you manage and control your application(s). You can start a local control center server (accessible on http://localhost:7419) with:
-
-```bash
-docker compose -f src/main/docker/jhipster-control-center.yml up
-```
-
-## Testing
-
-### Spring Boot tests
-
-To launch your application's tests, run:
-
-```bash
-./mvnw verify
-```
-
-### Client tests
-
-Unit tests are run by Vitest. They're located near components and can be run with:
-
-```bash
-./npmw test
-```
-
-## Others
-
-### Code quality using Sonar
-
-Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
-
-```bash
-docker compose -f src/main/docker/sonar.yml up -d
-```
-
-Note: we have turned off forced authentication redirect for UI in [src/main/docker/sonar.yml](src/main/docker/sonar.yml) for out of the box experience while trying out SonarQube, for real use cases turn it back on.
-
-You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
-
-Then, run a Sonar analysis:
-
-```bash
-./mvnw -Pprod clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
-```
-
-If you need to re-run the Sonar phase, please be sure to specify at least the `initialize` phase since Sonar properties are loaded from the sonar-project.properties file.
-
-```bash
-./mvnw initialize sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
-```
-
-Additionally, Instead of passing `sonar.password` and `sonar.login` as CLI arguments, these parameters can be configured from [sonar-project.properties](sonar-project.properties) as shown below:
-
-```bash
-sonar.login=admin
-sonar.password=admin
-```
-
-For more information, refer to the [Code quality page][].
-
-### Docker Compose support
-
-JHipster generates a number of Docker Compose configuration files in the [src/main/docker/](src/main/docker/) folder to launch required third party services.
-
-For example, to start required services in Docker containers, run:
-
-```bash
-docker compose -f src/main/docker/services.yml up -d
-```
-
-To stop and remove the containers, run:
-
-```bash
-docker compose -f src/main/docker/services.yml down
-```
-
-[Spring Docker Compose Integration](https://docs.spring.io/spring-boot/reference/features/dev-services.html) is enabled by default. It's possible to disable it in `application.yml`:
-
-```yaml
-spring:
-  ...
-  docker:
-    compose:
-      enabled: false
-```
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a Docker image of your app by running:
-
-```bash
-npm run java:docker
-```
-
-Or build an arm64 Docker image when using an arm64 processor OS, i.e., Apple Silicon chips (M\*), running:
-
-```bash
-npm run java:docker:arm64
-```
-
-Then run:
-
-```bash
-docker compose -f src/main/docker/app.yml up -d
-```
-
-For more information refer to [Docker and Docker-Compose](https://www.jhipster.tech/documentation-archive/v9.1.0/docker-compose/), this page also contains information on the Docker Compose sub-generator (`jhipster docker-compose`), which is able to generate Docker configurations for one or several JHipster applications.
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration](https://www.jhipster.tech/documentation-archive/v9.1.0/setting-up-ci/) page for more information.
-
-## References
-
-- [JHipster Homepage and latest documentation](https://www.jhipster.tech/)
-- [JHipster 9.1.0 archive](https://www.jhipster.tech/documentation-archive/v9.1.0)
-- [Using JHipster in development](https://www.jhipster.tech/documentation-archive/v9.1.0/development/)
-- [Using Docker and Docker-Compose](https://www.jhipster.tech/documentation-archive/v9.1.0/docker-compose)
-- [Using JHipster in production](https://www.jhipster.tech/documentation-archive/v9.1.0/production/)
-- [Running tests page](https://www.jhipster.tech/documentation-archive/v9.1.0/running-tests/)
-- [Code quality page](https://www.jhipster.tech/documentation-archive/v9.1.0/code-quality/)
-- [Setting up Continuous Integration](https://www.jhipster.tech/documentation-archive/v9.1.0/setting-up-ci/)
-- [Node.js](https://nodejs.org/)
-- [NPM](https://www.npmjs.com/)
-- [BrowserSync](https://www.browsersync.io/)
-- [Jest](https://jestjs.io)
-- [Leaflet](https://leafletjs.com/)
-- [DefinitelyTyped](https://definitelytyped.org/)
-- [Angular CLI](https://angular.dev/tools/cli)
+- Kafka events for solver job progress
+- Kubernetes deployment
+- Timefold benchmark comparison
+- Advanced local search or Tabu Search post-optimization
+- PDF export
+- Student-facing mobile application
