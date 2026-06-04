@@ -1,7 +1,11 @@
 package com.unischeduler.web.rest;
 
 import com.unischeduler.repository.SolverJobRepository;
+import com.unischeduler.security.AuthoritiesConstants;
+import com.unischeduler.service.SolverJobOrchestrationService;
 import com.unischeduler.service.SolverJobService;
+import com.unischeduler.service.dto.SolverJobResultDTO;
+import com.unischeduler.service.dto.SolverJobStatisticsDTO;
 import com.unischeduler.service.dto.SolverJobDTO;
 import com.unischeduler.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -18,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -40,11 +45,32 @@ public class SolverJobResource {
 
     private final SolverJobService solverJobService;
 
+    private final SolverJobOrchestrationService solverJobOrchestrationService;
+
     private final SolverJobRepository solverJobRepository;
 
-    public SolverJobResource(SolverJobService solverJobService, SolverJobRepository solverJobRepository) {
+    public SolverJobResource(
+        SolverJobService solverJobService,
+        SolverJobOrchestrationService solverJobOrchestrationService,
+        SolverJobRepository solverJobRepository
+    ) {
         this.solverJobService = solverJobService;
+        this.solverJobOrchestrationService = solverJobOrchestrationService;
         this.solverJobRepository = solverJobRepository;
+    }
+
+    /**
+     * {@code POST  /solver-jobs/generate-timetable} : Create and start an asynchronous timetable solver job.
+     *
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and the created solver job.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/generate-timetable")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<SolverJobDTO> generateTimetable() throws URISyntaxException {
+        LOG.debug("REST request to generate timetable asynchronously");
+        SolverJobDTO solverJobDTO = solverJobOrchestrationService.generateTimetable();
+        return ResponseEntity.created(new URI("/api/solver-jobs/" + solverJobDTO.getId())).body(solverJobDTO);
     }
 
     /**
@@ -160,6 +186,43 @@ public class SolverJobResource {
         LOG.debug("REST request to get SolverJob : {}", id);
         Optional<SolverJobDTO> solverJobDTO = solverJobService.findOne(id);
         return ResponseUtil.wrapOrNotFound(solverJobDTO);
+    }
+
+    /**
+     * {@code GET  /solver-jobs/:id/result} : get the generated timetable result for a solver job.
+     *
+     * @param id the id of the solver job.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the result payload.
+     */
+    @GetMapping("/{id}/result")
+    public ResponseEntity<SolverJobResultDTO> getSolverJobResult(@PathVariable("id") Long id) {
+        LOG.debug("REST request to get SolverJob result : {}", id);
+        return ResponseUtil.wrapOrNotFound(solverJobOrchestrationService.getResult(id));
+    }
+
+    /**
+     * {@code GET  /solver-jobs/:id/statistics} : get runtime statistics for a solver job.
+     *
+     * @param id the id of the solver job.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the statistics payload.
+     */
+    @GetMapping("/{id}/statistics")
+    public ResponseEntity<SolverJobStatisticsDTO> getSolverJobStatistics(@PathVariable("id") Long id) {
+        LOG.debug("REST request to get SolverJob statistics : {}", id);
+        return ResponseUtil.wrapOrNotFound(solverJobOrchestrationService.getStatistics(id));
+    }
+
+    /**
+     * {@code POST  /solver-jobs/:id/cancel} : request cancellation for a solver job.
+     *
+     * @param id the id of the solver job.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the cancelled job.
+     */
+    @PostMapping("/{id}/cancel")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<SolverJobDTO> cancelSolverJob(@PathVariable("id") Long id) {
+        LOG.debug("REST request to cancel SolverJob : {}", id);
+        return ResponseUtil.wrapOrNotFound(solverJobOrchestrationService.cancel(id));
     }
 
     /**

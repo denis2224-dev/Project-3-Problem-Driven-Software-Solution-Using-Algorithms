@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TimetableVersionRepository extends JpaRepository<TimetableVersion, Long> {
+    Optional<TimetableVersion> findFirstBySolverJobIdOrderByCreatedAtDesc(Long solverJobId);
+
     default Optional<TimetableVersion> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }

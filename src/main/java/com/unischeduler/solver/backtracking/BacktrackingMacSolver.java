@@ -11,6 +11,7 @@ import com.unischeduler.solver.csp.CSPVariable;
 import com.unischeduler.solver.heuristics.LCVValueOrdering;
 import com.unischeduler.solver.heuristics.MRVVariableSelector;
 import com.unischeduler.solver.scoring.SoftConstraintScorer;
+import com.unischeduler.solver.scoring.SoftConstraintScorer.ProfessorTimePreference;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,10 @@ public class BacktrackingMacSolver {
     }
 
     public SolverResult solveWithStatistics(CSPModel model) {
+        return solveWithStatistics(model, List.of());
+    }
+
+    public SolverResult solveWithStatistics(CSPModel model, List<ProfessorTimePreference> professorTimePreferences) {
         long startedAt = System.nanoTime();
         SolverStatistics statistics = new SolverStatistics();
         CSPModel workingModel = model.copy();
@@ -64,7 +69,7 @@ public class BacktrackingMacSolver {
             return SolverResult.failure("No hard-valid timetable assignment exists for the provided CSP model.", statistics);
         }
 
-        statistics.setSoftPenaltyScore(softConstraintScorer.score(assignment.orElseThrow()));
+        statistics.setSoftPenaltyScore(softConstraintScorer.score(assignment.orElseThrow(), professorTimePreferences));
         return SolverResult.success(assignment.orElseThrow(), statistics);
     }
 

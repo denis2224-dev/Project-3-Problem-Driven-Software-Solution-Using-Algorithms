@@ -14,6 +14,23 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TimetableEntryRepository extends JpaRepository<TimetableEntry, Long> {
+    @Query(
+        """
+        select timetableEntry from TimetableEntry timetableEntry
+        left join fetch timetableEntry.timetableVersion timetableVersion
+        left join fetch timetableEntry.courseEvent courseEvent
+        left join fetch courseEvent.course course
+        left join fetch courseEvent.professor professor
+        left join fetch courseEvent.studentGroup studentGroup
+        left join fetch timetableEntry.room room
+        left join fetch room.building building
+        left join fetch timetableEntry.timeslot timeslot
+        where timetableVersion.id = :versionId
+        order by timeslot.dayOfWeek, timeslot.startTime, course.code
+        """
+    )
+    List<TimetableEntry> findAllForVersionWithDetails(@Param("versionId") Long versionId);
+
     default Optional<TimetableEntry> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }
