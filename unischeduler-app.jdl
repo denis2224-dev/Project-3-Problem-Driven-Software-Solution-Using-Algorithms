@@ -1,0 +1,27 @@
+application {
+  config {
+    applicationType monolith
+    baseName UniScheduler
+    packageName com.unischeduler
+    authenticationType jwt
+    buildTool maven
+    databaseType sql
+    devDatabaseType postgresql
+    prodDatabaseType postgresql
+    cacheProvider caffeine
+    enableHibernateCache true
+    clientFramework angular
+    enableTranslation true
+    nativeLanguage en
+    languages [en]
+    reactive false
+    serviceDiscoveryType no
+    messageBroker no
+    searchEngine no
+    websocket no
+    serverPort 8080
+    skipUserManagement false
+    withAdminUi true
+    testFrameworks []
+  }
+}

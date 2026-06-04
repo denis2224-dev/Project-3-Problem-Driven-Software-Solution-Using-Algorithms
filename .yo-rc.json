@@ -1,0 +1,33 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "UniScheduler",
+    "buildTool": "maven",
+    "cacheProvider": "caffeine",
+    "clientFramework": "angular",
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "enableHibernateCache": true,
+    "enableTranslation": true,
+    "entities": [],
+    "jhipsterVersion": "9.1.0",
+    "jwtSecretKey": "dW5pc2NoZWR1bGVyLWRldmVsb3BtZW50LXNhbXBsZS1qd3Qtc2VjcmV0LWtleS1ub3QtZm9yLXByb2R1Y3Rpb24tY2hhbmdlLW1lLTIwMjY=",
+    "languages": ["en"],
+    "messageBroker": "no",
+    "nativeLanguage": "en",
+    "nodePackageManager": "npm",
+    "packageName": "com.unischeduler",
+    "prodDatabaseType": "postgresql",
+    "reactive": false,
+    "searchEngine": "no",
+    "serverPort": "8080",
+    "serviceDiscoveryType": "no",
+    "skipCommitHook": true,
+    "skipFakeData": true,
+    "skipUserManagement": false,
+    "testFrameworks": [],
+    "websocket": "no",
+    "withAdminUi": true
+  }
+}
