@@ -1,0 +1,31 @@
+{
+  "uniSchedulerApp": {
+    "timetableVersion": {
+      "home": {
+        "title": "Timetable Versions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Timetable Version",
+        "createOrEditLabel": "Create or edit a Timetable Version",
+        "notFound": "No Timetable Versions found"
+      },
+      "created": "A new Timetable Version is created with identifier {{ param }}",
+      "updated": "A Timetable Version is updated with identifier {{ param }}",
+      "deleted": "A Timetable Version is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Timetable Version {{ id }}?"
+      },
+      "detail": {
+        "title": "Timetable Version"
+      },
+      "id": "ID",
+      "versionNumber": "Version Number",
+      "createdAt": "Created At",
+      "totalHardConflicts": "Total Hard Conflicts",
+      "totalSoftPenalty": "Total Soft Penalty",
+      "averageStudentGap": "Average Student Gap",
+      "roomUtilization": "Room Utilization",
+      "timetable": "Timetable",
+      "solverJob": "Solver Job"
+    }
+  }
+}

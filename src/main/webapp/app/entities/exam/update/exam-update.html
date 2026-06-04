@@ -1,0 +1,177 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-exam-heading" data-cy="ExamCreateUpdateHeading" jhiTranslate="uniSchedulerApp.exam.home.createOrEditLabel">
+        Create or edit a Exam
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let nameRef = editForm.get('name')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_name" jhiTranslate="uniSchedulerApp.exam.name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
+            <div>
+              @if (editForm.get('name')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('name')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '160' }"
+                  >This field cannot be longer than 160 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let durationMinutesRef = editForm.get('durationMinutes')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_durationMinutes" jhiTranslate="uniSchedulerApp.exam.durationMinutes">Duration Minutes</label>
+          <input
+            type="number"
+            class="form-control"
+            name="durationMinutes"
+            id="field_durationMinutes"
+            data-cy="durationMinutes"
+            formControlName="durationMinutes"
+          />
+          @if (durationMinutesRef.invalid && (durationMinutesRef.dirty || durationMinutesRef.touched)) {
+            <div>
+              @if (editForm.get('durationMinutes')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('durationMinutes')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '30' }"
+                  >This field should be at least 30.</small
+                >
+              }
+              @if (editForm.get('durationMinutes')?.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '240' }"
+                  >This field cannot be more than 240.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('durationMinutes')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let expectedStudentsRef = editForm.get('expectedStudents')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_expectedStudents" jhiTranslate="uniSchedulerApp.exam.expectedStudents"
+            >Expected Students</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="expectedStudents"
+            id="field_expectedStudents"
+            data-cy="expectedStudents"
+            formControlName="expectedStudents"
+          />
+          @if (expectedStudentsRef.invalid && (expectedStudentsRef.dirty || expectedStudentsRef.touched)) {
+            <div>
+              @if (editForm.get('expectedStudents')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('expectedStudents')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '1' }"
+                  >This field should be at least 1.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('expectedStudents')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_course" jhiTranslate="uniSchedulerApp.exam.course">Course</label>
+          <select
+            class="form-control"
+            id="field_course"
+            data-cy="course"
+            name="course"
+            formControlName="course"
+            [compareWith]="compareCourse"
+          >
+            @if (!editForm.get('course')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (courseOption of coursesSharedCollection(); track $index) {
+              <option [ngValue]="courseOption">{{ courseOption.code }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['course'])!.invalid && (editForm.get(['course'])!.dirty || editForm.get(['course'])!.touched)) {
+          <div>
+            @if (editForm.get(['course'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_studentGroup" jhiTranslate="uniSchedulerApp.exam.studentGroup">Student Group</label>
+          <select
+            class="form-control"
+            id="field_studentGroup"
+            data-cy="studentGroup"
+            name="studentGroup"
+            formControlName="studentGroup"
+            [compareWith]="compareStudentGroup"
+          >
+            @if (!editForm.get('studentGroup')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (studentGroupOption of studentGroupsSharedCollection(); track $index) {
+              <option [ngValue]="studentGroupOption">{{ studentGroupOption.name }}</option>
+            }
+          </select>
+        </div>
+        @if (
+          editForm.get(['studentGroup'])!.invalid && (editForm.get(['studentGroup'])!.dirty || editForm.get(['studentGroup'])!.touched)
+        ) {
+          <div>
+            @if (editForm.get(['studentGroup'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

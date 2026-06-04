@@ -1,0 +1,72 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (timetableVersion(); as timetableVersionRef) {
+      <div>
+        <h2 data-cy="timetableVersionDetailsHeading">
+          <span jhiTranslate="uniSchedulerApp.timetableVersion.detail.title">Timetable Version</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ timetableVersionRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableVersion.versionNumber">Version Number</span></dt>
+          <dd>
+            <span>{{ timetableVersionRef.versionNumber }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableVersion.createdAt">Created At</span></dt>
+          <dd>
+            <span>{{ timetableVersionRef.createdAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableVersion.totalHardConflicts">Total Hard Conflicts</span></dt>
+          <dd>
+            <span>{{ timetableVersionRef.totalHardConflicts }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableVersion.totalSoftPenalty">Total Soft Penalty</span></dt>
+          <dd>
+            <span>{{ timetableVersionRef.totalSoftPenalty }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableVersion.averageStudentGap">Average Student Gap</span></dt>
+          <dd>
+            <span>{{ timetableVersionRef.averageStudentGap }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableVersion.roomUtilization">Room Utilization</span></dt>
+          <dd>
+            <span>{{ timetableVersionRef.roomUtilization }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableVersion.timetable">Timetable</span></dt>
+          <dd>
+            @if (timetableVersion()!.timetable) {
+              <div>
+                <a [routerLink]="['/timetable', timetableVersion()!.timetable?.id, 'view']">{{ timetableVersionRef.timetable?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableVersion.solverJob">Solver Job</span></dt>
+          <dd>
+            @if (timetableVersion()!.solverJob) {
+              <div>
+                <a [routerLink]="['/solver-job', timetableVersion()!.solverJob?.id, 'view']">{{ timetableVersionRef.solverJob?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/timetable-version', timetableVersionRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

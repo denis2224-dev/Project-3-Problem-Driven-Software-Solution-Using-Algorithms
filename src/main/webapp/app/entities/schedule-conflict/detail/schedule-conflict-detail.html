@@ -1,0 +1,65 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (scheduleConflict(); as scheduleConflictRef) {
+      <div>
+        <h2 data-cy="scheduleConflictDetailsHeading">
+          <span jhiTranslate="uniSchedulerApp.scheduleConflict.detail.title">Schedule Conflict</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ scheduleConflictRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.scheduleConflict.conflictType">Conflict Type</span></dt>
+          <dd>
+            <span [jhiTranslate]="'uniSchedulerApp.ConflictType.' + (scheduleConflictRef.conflictType ?? 'null')">{{
+              {
+                null: '',
+                PROFESSOR_CLASH: 'PROFESSOR_CLASH',
+                GROUP_CLASH: 'GROUP_CLASH',
+                ROOM_CLASH: 'ROOM_CLASH',
+                CAPACITY_VIOLATION: 'CAPACITY_VIOLATION',
+                EQUIPMENT_MISMATCH: 'EQUIPMENT_MISMATCH',
+              }[scheduleConflictRef.conflictType ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.scheduleConflict.description">Description</span></dt>
+          <dd>
+            <span>{{ scheduleConflictRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.scheduleConflict.severity">Severity</span></dt>
+          <dd>
+            <span [jhiTranslate]="'uniSchedulerApp.ConflictSeverity.' + (scheduleConflictRef.severity ?? 'null')">{{
+              { null: '', HARD: 'HARD', SOFT: 'SOFT' }[scheduleConflictRef.severity ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.scheduleConflict.timetableVersion">Timetable Version</span></dt>
+          <dd>
+            @if (scheduleConflict()!.timetableVersion) {
+              <div>
+                <a [routerLink]="['/timetable-version', scheduleConflict()!.timetableVersion?.id, 'view']">{{
+                  scheduleConflictRef.timetableVersion?.versionNumber
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/schedule-conflict', scheduleConflictRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

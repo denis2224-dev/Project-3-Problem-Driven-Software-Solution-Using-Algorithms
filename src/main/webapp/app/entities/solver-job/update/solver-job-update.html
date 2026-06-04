@@ -1,0 +1,279 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-solver-job-heading"
+        data-cy="SolverJobCreateUpdateHeading"
+        jhiTranslate="uniSchedulerApp.solverJob.home.createOrEditLabel"
+      >
+        Create or edit a Solver Job
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let statusRef = editForm.get('status')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_status" jhiTranslate="uniSchedulerApp.solverJob.status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null">{{ 'uniSchedulerApp.SolverJobStatus.null' | translate }}</option>
+            @for (solverJobStatus of solverJobStatusValues; track $index) {
+              <option [value]="solverJobStatus">{{ 'uniSchedulerApp.SolverJobStatus.' + solverJobStatus | translate }}</option>
+            }
+          </select>
+          @if (statusRef.invalid && (statusRef.dirty || statusRef.touched)) {
+            <div>
+              @if (editForm.get('status')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_startedAt" jhiTranslate="uniSchedulerApp.solverJob.startedAt">Started At</label>
+          <div class="d-flex">
+            <input
+              id="field_startedAt"
+              data-cy="startedAt"
+              type="datetime-local"
+              class="form-control"
+              name="startedAt"
+              formControlName="startedAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_finishedAt" jhiTranslate="uniSchedulerApp.solverJob.finishedAt">Finished At</label>
+          <div class="d-flex">
+            <input
+              id="field_finishedAt"
+              data-cy="finishedAt"
+              type="datetime-local"
+              class="form-control"
+              name="finishedAt"
+              formControlName="finishedAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        @let progressPercentRef = editForm.get('progressPercent')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_progressPercent" jhiTranslate="uniSchedulerApp.solverJob.progressPercent"
+            >Progress Percent</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="progressPercent"
+            id="field_progressPercent"
+            data-cy="progressPercent"
+            formControlName="progressPercent"
+          />
+          @if (progressPercentRef.invalid && (progressPercentRef.dirty || progressPercentRef.touched)) {
+            <div>
+              @if (editForm.get('progressPercent')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              @if (editForm.get('progressPercent')?.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '100' }"
+                  >This field cannot be more than 100.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('progressPercent')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let messageRef = editForm.get('message')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_message" jhiTranslate="uniSchedulerApp.solverJob.message">Message</label>
+          <input type="text" class="form-control" name="message" id="field_message" data-cy="message" formControlName="message" />
+          @if (messageRef.invalid && (messageRef.dirty || messageRef.touched)) {
+            <div>
+              @if (editForm.get('message')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '2000' }"
+                  >This field cannot be longer than 2000 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let hardConflictCountRef = editForm.get('hardConflictCount')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_hardConflictCount" jhiTranslate="uniSchedulerApp.solverJob.hardConflictCount"
+            >Hard Conflict Count</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="hardConflictCount"
+            id="field_hardConflictCount"
+            data-cy="hardConflictCount"
+            formControlName="hardConflictCount"
+          />
+          @if (hardConflictCountRef.invalid && (hardConflictCountRef.dirty || hardConflictCountRef.touched)) {
+            <div>
+              @if (editForm.get('hardConflictCount')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('hardConflictCount')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let softPenaltyScoreRef = editForm.get('softPenaltyScore')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_softPenaltyScore" jhiTranslate="uniSchedulerApp.solverJob.softPenaltyScore"
+            >Soft Penalty Score</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="softPenaltyScore"
+            id="field_softPenaltyScore"
+            data-cy="softPenaltyScore"
+            formControlName="softPenaltyScore"
+          />
+          @if (softPenaltyScoreRef.invalid && (softPenaltyScoreRef.dirty || softPenaltyScoreRef.touched)) {
+            <div>
+              @if (editForm.get('softPenaltyScore')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('softPenaltyScore')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let backtrackCountRef = editForm.get('backtrackCount')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_backtrackCount" jhiTranslate="uniSchedulerApp.solverJob.backtrackCount"
+            >Backtrack Count</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="backtrackCount"
+            id="field_backtrackCount"
+            data-cy="backtrackCount"
+            formControlName="backtrackCount"
+          />
+          @if (backtrackCountRef.invalid && (backtrackCountRef.dirty || backtrackCountRef.touched)) {
+            <div>
+              @if (editForm.get('backtrackCount')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('backtrackCount')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let domainReductionCountRef = editForm.get('domainReductionCount')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_domainReductionCount" jhiTranslate="uniSchedulerApp.solverJob.domainReductionCount"
+            >Domain Reduction Count</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="domainReductionCount"
+            id="field_domainReductionCount"
+            data-cy="domainReductionCount"
+            formControlName="domainReductionCount"
+          />
+          @if (domainReductionCountRef.invalid && (domainReductionCountRef.dirty || domainReductionCountRef.touched)) {
+            <div>
+              @if (editForm.get('domainReductionCount')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('domainReductionCount')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let runtimeMsRef = editForm.get('runtimeMs')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_runtimeMs" jhiTranslate="uniSchedulerApp.solverJob.runtimeMs">Runtime Ms</label>
+          <input type="number" class="form-control" name="runtimeMs" id="field_runtimeMs" data-cy="runtimeMs" formControlName="runtimeMs" />
+          @if (runtimeMsRef.invalid && (runtimeMsRef.dirty || runtimeMsRef.touched)) {
+            <div>
+              @if (editForm.get('runtimeMs')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('runtimeMs')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

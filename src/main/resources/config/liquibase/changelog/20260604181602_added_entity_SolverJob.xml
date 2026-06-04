@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity SolverJob.
+    -->
+    <changeSet id="20260604181602-1" author="jhipster">
+        <createTable tableName="solver_job">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="started_at" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="finished_at" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="progress_percent" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="message" type="varchar(2000)">
+                <constraints nullable="true" />
+            </column>
+            <column name="hard_conflict_count" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="soft_penalty_score" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="backtrack_count" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="domain_reduction_count" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="runtime_ms" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <dropDefaultValue tableName="solver_job" columnName="started_at" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="solver_job" columnName="finished_at" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+</databaseChangeLog>

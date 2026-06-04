@@ -1,0 +1,10 @@
+{
+  "uniSchedulerApp": {
+    "TimetableStatus": {
+      "null": "",
+      "DRAFT": "DRAFT",
+      "APPROVED": "APPROVED",
+      "PUBLISHED": "PUBLISHED"
+    }
+  }
+}

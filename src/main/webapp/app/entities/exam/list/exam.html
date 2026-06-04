@@ -1,0 +1,145 @@
+<div>
+  <h2 id="page-heading" data-cy="ExamHeading">
+    <span jhiTranslate="uniSchedulerApp.exam.home.title">Exams</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="uniSchedulerApp.exam.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-exam"
+        [routerLink]="['/exam/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="uniSchedulerApp.exam.home.createLabel">Create a new Exam</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (exams().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="uniSchedulerApp.exam.home.notFound">No Exams found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="name">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.exam.name">Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="durationMinutes">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.exam.durationMinutes">Duration Minutes</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="expectedStudents">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.exam.expectedStudents">Expected Students</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="course.code">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.exam.course">Course</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="studentGroup.name">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.exam.studentGroup">Student Group</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (exam of exams(); track trackId(exam)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/exam', exam.id, 'view']">{{ exam.id }}</a>
+              </td>
+              <td>{{ exam.name }}</td>
+              <td>{{ exam.durationMinutes }}</td>
+              <td>{{ exam.expectedStudents }}</td>
+              <td>
+                @if (exam.course) {
+                  <div>
+                    <a [routerLink]="['/course', exam.course.id, 'view']">{{ exam.course.code }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (exam.studentGroup) {
+                  <div>
+                    <a [routerLink]="['/student-group', exam.studentGroup.id, 'view']">{{ exam.studentGroup.name }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/exam', exam.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a [routerLink]="['/exam', exam.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(exam)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (exams().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

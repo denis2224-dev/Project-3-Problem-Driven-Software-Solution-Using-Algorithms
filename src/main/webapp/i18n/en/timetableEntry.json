@@ -1,0 +1,27 @@
+{
+  "uniSchedulerApp": {
+    "timetableEntry": {
+      "home": {
+        "title": "Timetable Entries",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Timetable Entry",
+        "createOrEditLabel": "Create or edit a Timetable Entry",
+        "notFound": "No Timetable Entries found"
+      },
+      "created": "A new Timetable Entry is created with identifier {{ param }}",
+      "updated": "A Timetable Entry is updated with identifier {{ param }}",
+      "deleted": "A Timetable Entry is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Timetable Entry {{ id }}?"
+      },
+      "detail": {
+        "title": "Timetable Entry"
+      },
+      "id": "ID",
+      "timetableVersion": "Timetable Version",
+      "courseEvent": "Course Event",
+      "room": "Room",
+      "timeslot": "Timeslot"
+    }
+  }
+}

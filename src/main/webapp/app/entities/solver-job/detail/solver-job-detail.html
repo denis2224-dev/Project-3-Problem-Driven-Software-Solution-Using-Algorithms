@@ -1,0 +1,84 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (solverJob(); as solverJobRef) {
+      <div>
+        <h2 data-cy="solverJobDetailsHeading"><span jhiTranslate="uniSchedulerApp.solverJob.detail.title">Solver Job</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ solverJobRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.status">Status</span></dt>
+          <dd>
+            <span [jhiTranslate]="'uniSchedulerApp.SolverJobStatus.' + (solverJobRef.status ?? 'null')">{{
+              {
+                null: '',
+                CREATED: 'CREATED',
+                VALIDATING_INPUT: 'VALIDATING_INPUT',
+                BUILDING_CONFLICT_GRAPH: 'BUILDING_CONFLICT_GRAPH',
+                RUNNING_WELCH_POWELL: 'RUNNING_WELCH_POWELL',
+                RUNNING_AC3: 'RUNNING_AC3',
+                RUNNING_BACKTRACKING: 'RUNNING_BACKTRACKING',
+                SCORING_SOFT_CONSTRAINTS: 'SCORING_SOFT_CONSTRAINTS',
+                COMPLETED: 'COMPLETED',
+                FAILED: 'FAILED',
+                CANCELLED: 'CANCELLED',
+              }[solverJobRef.status ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.startedAt">Started At</span></dt>
+          <dd>
+            <span>{{ solverJobRef.startedAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.finishedAt">Finished At</span></dt>
+          <dd>
+            <span>{{ solverJobRef.finishedAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.progressPercent">Progress Percent</span></dt>
+          <dd>
+            <span>{{ solverJobRef.progressPercent }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.message">Message</span></dt>
+          <dd>
+            <span>{{ solverJobRef.message }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.hardConflictCount">Hard Conflict Count</span></dt>
+          <dd>
+            <span>{{ solverJobRef.hardConflictCount }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.softPenaltyScore">Soft Penalty Score</span></dt>
+          <dd>
+            <span>{{ solverJobRef.softPenaltyScore }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.backtrackCount">Backtrack Count</span></dt>
+          <dd>
+            <span>{{ solverJobRef.backtrackCount }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.domainReductionCount">Domain Reduction Count</span></dt>
+          <dd>
+            <span>{{ solverJobRef.domainReductionCount }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.solverJob.runtimeMs">Runtime Ms</span></dt>
+          <dd>
+            <span>{{ solverJobRef.runtimeMs }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/solver-job', solverJobRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,99 @@
+enum SolverJobStatus {
+  CREATED,
+  VALIDATING_INPUT,
+  BUILDING_CONFLICT_GRAPH,
+  RUNNING_WELCH_POWELL,
+  RUNNING_AC3,
+  RUNNING_BACKTRACKING,
+  SCORING_SOFT_CONSTRAINTS,
+  COMPLETED,
+  FAILED,
+  CANCELLED
+}
+
+enum TimetableStatus {
+  DRAFT,
+  APPROVED,
+  PUBLISHED
+}
+
+enum ConflictType {
+  PROFESSOR_CLASH,
+  GROUP_CLASH,
+  ROOM_CLASH,
+  CAPACITY_VIOLATION,
+  EQUIPMENT_MISMATCH
+}
+
+enum ConflictSeverity {
+  HARD,
+  SOFT
+}
+
+entity SolverJob {
+  status SolverJobStatus required
+  startedAt Instant
+  finishedAt Instant
+  progressPercent Integer min(0) max(100)
+  message String maxlength(2000)
+  hardConflictCount Integer min(0)
+  softPenaltyScore Integer min(0)
+  backtrackCount Integer min(0)
+  domainReductionCount Integer min(0)
+  runtimeMs Long min(0)
+}
+
+entity Timetable {
+  name String required maxlength(160)
+  semester String required maxlength(40)
+  academicYear String required maxlength(20)
+  status TimetableStatus required
+  createdAt Instant required
+}
+
+entity TimetableVersion {
+  versionNumber Integer required min(1)
+  createdAt Instant required
+  totalHardConflicts Integer min(0)
+  totalSoftPenalty Integer min(0)
+  averageStudentGap Double min(0)
+  roomUtilization Double min(0)
+}
+
+entity TimetableEntry {
+}
+
+entity ScheduleConflict {
+  conflictType ConflictType required
+  description String required maxlength(2000)
+  severity ConflictSeverity required
+}
+
+entity Exam {
+  name String required maxlength(160)
+  durationMinutes Integer required min(30) max(240)
+  expectedStudents Integer required min(1)
+}
+
+entity ExamScheduleEntry {
+}
+
+relationship ManyToOne {
+  TimetableVersion{timetable(name) required} to Timetable
+  TimetableVersion{solverJob} to SolverJob
+  TimetableEntry{timetableVersion(versionNumber) required} to TimetableVersion
+  TimetableEntry{courseEvent required} to CourseEvent with builtInEntity
+  TimetableEntry{room(code) required} to Room with builtInEntity
+  TimetableEntry{timeslot(startTime) required} to Timeslot with builtInEntity
+  ScheduleConflict{timetableVersion(versionNumber) required} to TimetableVersion
+  Exam{course(code) required} to Course with builtInEntity
+  Exam{studentGroup(name) required} to StudentGroup with builtInEntity
+  ExamScheduleEntry{exam(name) required} to Exam
+  ExamScheduleEntry{room(code) required} to Room with builtInEntity
+  ExamScheduleEntry{timeslot(startTime) required} to Timeslot with builtInEntity
+  ExamScheduleEntry{timetableVersion(versionNumber) required} to TimetableVersion
+}
+
+dto SolverJob, Timetable, TimetableVersion, TimetableEntry, ScheduleConflict, Exam, ExamScheduleEntry with mapstruct
+service SolverJob, Timetable, TimetableVersion, TimetableEntry, ScheduleConflict, Exam, ExamScheduleEntry with serviceClass
+paginate SolverJob, Timetable, TimetableVersion, TimetableEntry, ScheduleConflict, Exam, ExamScheduleEntry with pagination

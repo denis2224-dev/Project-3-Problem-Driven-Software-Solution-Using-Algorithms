@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity ExamScheduleEntry.
+    -->
+    <changeSet id="20260604181608-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="exam_id"
+                                 baseTableName="exam_schedule_entry"
+                                 constraintName="fk_exam_schedule_entry__exam_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="exam"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="room_id"
+                                 baseTableName="exam_schedule_entry"
+                                 constraintName="fk_exam_schedule_entry__room_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="room"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="timeslot_id"
+                                 baseTableName="exam_schedule_entry"
+                                 constraintName="fk_exam_schedule_entry__timeslot_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="timeslot"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="timetable_version_id"
+                                 baseTableName="exam_schedule_entry"
+                                 constraintName="fk_exam_schedule_entry__timetable_version_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="timetable_version"
+                                 />
+    </changeSet>
+</databaseChangeLog>

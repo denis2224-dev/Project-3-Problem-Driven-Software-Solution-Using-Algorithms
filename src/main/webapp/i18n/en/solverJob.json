@@ -1,0 +1,33 @@
+{
+  "uniSchedulerApp": {
+    "solverJob": {
+      "home": {
+        "title": "Solver Jobs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Solver Job",
+        "createOrEditLabel": "Create or edit a Solver Job",
+        "notFound": "No Solver Jobs found"
+      },
+      "created": "A new Solver Job is created with identifier {{ param }}",
+      "updated": "A Solver Job is updated with identifier {{ param }}",
+      "deleted": "A Solver Job is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Solver Job {{ id }}?"
+      },
+      "detail": {
+        "title": "Solver Job"
+      },
+      "id": "ID",
+      "status": "Status",
+      "startedAt": "Started At",
+      "finishedAt": "Finished At",
+      "progressPercent": "Progress Percent",
+      "message": "Message",
+      "hardConflictCount": "Hard Conflict Count",
+      "softPenaltyScore": "Soft Penalty Score",
+      "backtrackCount": "Backtrack Count",
+      "domainReductionCount": "Domain Reduction Count",
+      "runtimeMs": "Runtime Ms"
+    }
+  }
+}

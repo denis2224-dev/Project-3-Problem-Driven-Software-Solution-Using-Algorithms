@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (examScheduleEntry(); as examScheduleEntryRef) {
+      <div>
+        <h2 data-cy="examScheduleEntryDetailsHeading">
+          <span jhiTranslate="uniSchedulerApp.examScheduleEntry.detail.title">Exam Schedule Entry</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ examScheduleEntryRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.examScheduleEntry.exam">Exam</span></dt>
+          <dd>
+            @if (examScheduleEntry()!.exam) {
+              <div>
+                <a [routerLink]="['/exam', examScheduleEntry()!.exam?.id, 'view']">{{ examScheduleEntryRef.exam?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.examScheduleEntry.room">Room</span></dt>
+          <dd>
+            @if (examScheduleEntry()!.room) {
+              <div>
+                <a [routerLink]="['/room', examScheduleEntry()!.room?.id, 'view']">{{ examScheduleEntryRef.room?.code }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.examScheduleEntry.timeslot">Timeslot</span></dt>
+          <dd>
+            @if (examScheduleEntry()!.timeslot) {
+              <div>
+                <a [routerLink]="['/timeslot', examScheduleEntry()!.timeslot?.id, 'view']">{{
+                  examScheduleEntryRef.timeslot?.startTime
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.examScheduleEntry.timetableVersion">Timetable Version</span></dt>
+          <dd>
+            @if (examScheduleEntry()!.timetableVersion) {
+              <div>
+                <a [routerLink]="['/timetable-version', examScheduleEntry()!.timetableVersion?.id, 'view']">{{
+                  examScheduleEntryRef.timetableVersion?.versionNumber
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/exam-schedule-entry', examScheduleEntryRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

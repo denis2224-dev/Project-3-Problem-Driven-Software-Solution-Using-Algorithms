@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (timetableEntry(); as timetableEntryRef) {
+      <div>
+        <h2 data-cy="timetableEntryDetailsHeading">
+          <span jhiTranslate="uniSchedulerApp.timetableEntry.detail.title">Timetable Entry</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ timetableEntryRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableEntry.timetableVersion">Timetable Version</span></dt>
+          <dd>
+            @if (timetableEntry()!.timetableVersion) {
+              <div>
+                <a [routerLink]="['/timetable-version', timetableEntry()!.timetableVersion?.id, 'view']">{{
+                  timetableEntryRef.timetableVersion?.versionNumber
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableEntry.courseEvent">Course Event</span></dt>
+          <dd>
+            @if (timetableEntry()!.courseEvent) {
+              <div>
+                <a [routerLink]="['/course-event', timetableEntry()!.courseEvent?.id, 'view']">{{ timetableEntryRef.courseEvent?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableEntry.room">Room</span></dt>
+          <dd>
+            @if (timetableEntry()!.room) {
+              <div>
+                <a [routerLink]="['/room', timetableEntry()!.room?.id, 'view']">{{ timetableEntryRef.room?.code }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetableEntry.timeslot">Timeslot</span></dt>
+          <dd>
+            @if (timetableEntry()!.timeslot) {
+              <div>
+                <a [routerLink]="['/timeslot', timetableEntry()!.timeslot?.id, 'view']">{{ timetableEntryRef.timeslot?.startTime }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/timetable-entry', timetableEntryRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

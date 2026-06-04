@@ -1,0 +1,48 @@
+{
+  "annotations": {
+    "changelogDate": "20260604181605"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [],
+  "name": "TimetableEntry",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "versionNumber",
+      "otherEntityName": "timetableVersion",
+      "relationshipName": "timetableVersion",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "courseEvent",
+      "relationshipName": "courseEvent",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityField": "code",
+      "otherEntityName": "room",
+      "relationshipName": "room",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityField": "startTime",
+      "otherEntityName": "timeslot",
+      "relationshipName": "timeslot",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required",
+      "relationshipWithBuiltInEntity": true
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

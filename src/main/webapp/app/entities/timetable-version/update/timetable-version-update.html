@@ -1,0 +1,265 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-timetable-version-heading"
+        data-cy="TimetableVersionCreateUpdateHeading"
+        jhiTranslate="uniSchedulerApp.timetableVersion.home.createOrEditLabel"
+      >
+        Create or edit a Timetable Version
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let versionNumberRef = editForm.get('versionNumber')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_versionNumber" jhiTranslate="uniSchedulerApp.timetableVersion.versionNumber"
+            >Version Number</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="versionNumber"
+            id="field_versionNumber"
+            data-cy="versionNumber"
+            formControlName="versionNumber"
+          />
+          @if (versionNumberRef.invalid && (versionNumberRef.dirty || versionNumberRef.touched)) {
+            <div>
+              @if (editForm.get('versionNumber')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('versionNumber')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '1' }"
+                  >This field should be at least 1.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('versionNumber')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let createdAtRef = editForm.get('createdAt')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_createdAt" jhiTranslate="uniSchedulerApp.timetableVersion.createdAt">Created At</label>
+          <div class="d-flex">
+            <input
+              id="field_createdAt"
+              data-cy="createdAt"
+              type="datetime-local"
+              class="form-control"
+              name="createdAt"
+              formControlName="createdAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          @if (createdAtRef.invalid && (createdAtRef.dirty || createdAtRef.touched)) {
+            <div>
+              @if (editForm.get('createdAt')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('createdAt')?.errors?.datetimelocal"
+                jhiTranslate="entity.validation.datetimelocal"
+                >This field should be a date and time.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let totalHardConflictsRef = editForm.get('totalHardConflicts')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_totalHardConflicts" jhiTranslate="uniSchedulerApp.timetableVersion.totalHardConflicts"
+            >Total Hard Conflicts</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="totalHardConflicts"
+            id="field_totalHardConflicts"
+            data-cy="totalHardConflicts"
+            formControlName="totalHardConflicts"
+          />
+          @if (totalHardConflictsRef.invalid && (totalHardConflictsRef.dirty || totalHardConflictsRef.touched)) {
+            <div>
+              @if (editForm.get('totalHardConflicts')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('totalHardConflicts')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let totalSoftPenaltyRef = editForm.get('totalSoftPenalty')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_totalSoftPenalty" jhiTranslate="uniSchedulerApp.timetableVersion.totalSoftPenalty"
+            >Total Soft Penalty</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="totalSoftPenalty"
+            id="field_totalSoftPenalty"
+            data-cy="totalSoftPenalty"
+            formControlName="totalSoftPenalty"
+          />
+          @if (totalSoftPenaltyRef.invalid && (totalSoftPenaltyRef.dirty || totalSoftPenaltyRef.touched)) {
+            <div>
+              @if (editForm.get('totalSoftPenalty')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('totalSoftPenalty')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let averageStudentGapRef = editForm.get('averageStudentGap')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_averageStudentGap" jhiTranslate="uniSchedulerApp.timetableVersion.averageStudentGap"
+            >Average Student Gap</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="averageStudentGap"
+            id="field_averageStudentGap"
+            data-cy="averageStudentGap"
+            formControlName="averageStudentGap"
+          />
+          @if (averageStudentGapRef.invalid && (averageStudentGapRef.dirty || averageStudentGapRef.touched)) {
+            <div>
+              @if (editForm.get('averageStudentGap')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('averageStudentGap')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let roomUtilizationRef = editForm.get('roomUtilization')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_roomUtilization" jhiTranslate="uniSchedulerApp.timetableVersion.roomUtilization"
+            >Room Utilization</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="roomUtilization"
+            id="field_roomUtilization"
+            data-cy="roomUtilization"
+            formControlName="roomUtilization"
+          />
+          @if (roomUtilizationRef.invalid && (roomUtilizationRef.dirty || roomUtilizationRef.touched)) {
+            <div>
+              @if (editForm.get('roomUtilization')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >This field should be at least 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('roomUtilization')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_timetable" jhiTranslate="uniSchedulerApp.timetableVersion.timetable">Timetable</label>
+          <select
+            class="form-control"
+            id="field_timetable"
+            data-cy="timetable"
+            name="timetable"
+            formControlName="timetable"
+            [compareWith]="compareTimetable"
+          >
+            @if (!editForm.get('timetable')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (timetableOption of timetablesSharedCollection(); track $index) {
+              <option [ngValue]="timetableOption">{{ timetableOption.name }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['timetable'])!.invalid && (editForm.get(['timetable'])!.dirty || editForm.get(['timetable'])!.touched)) {
+          <div>
+            @if (editForm.get(['timetable'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_solverJob" jhiTranslate="uniSchedulerApp.timetableVersion.solverJob">Solver Job</label>
+          <select
+            class="form-control"
+            id="field_solverJob"
+            data-cy="solverJob"
+            name="solverJob"
+            formControlName="solverJob"
+            [compareWith]="compareSolverJob"
+          >
+            <option [ngValue]="null"></option>
+            @for (solverJobOption of solverJobsSharedCollection(); track $index) {
+              <option [ngValue]="solverJobOption">{{ solverJobOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

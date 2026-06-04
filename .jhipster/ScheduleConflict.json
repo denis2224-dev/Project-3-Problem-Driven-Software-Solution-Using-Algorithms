@@ -1,0 +1,41 @@
+{
+  "annotations": {
+    "changelogDate": "20260604181606"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "conflictType",
+      "fieldType": "ConflictType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PROFESSOR_CLASH,GROUP_CLASH,ROOM_CLASH,CAPACITY_VIOLATION,EQUIPMENT_MISMATCH"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "2000"
+    },
+    {
+      "fieldName": "severity",
+      "fieldType": "ConflictSeverity",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "HARD,SOFT"
+    }
+  ],
+  "name": "ScheduleConflict",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "versionNumber",
+      "otherEntityName": "timetableVersion",
+      "relationshipName": "timetableVersion",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

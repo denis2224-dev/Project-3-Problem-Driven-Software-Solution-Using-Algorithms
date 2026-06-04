@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (timetable(); as timetableRef) {
+      <div>
+        <h2 data-cy="timetableDetailsHeading"><span jhiTranslate="uniSchedulerApp.timetable.detail.title">Timetable</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ timetableRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetable.name">Name</span></dt>
+          <dd>
+            <span>{{ timetableRef.name }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetable.semester">Semester</span></dt>
+          <dd>
+            <span>{{ timetableRef.semester }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetable.academicYear">Academic Year</span></dt>
+          <dd>
+            <span>{{ timetableRef.academicYear }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetable.status">Status</span></dt>
+          <dd>
+            <span [jhiTranslate]="'uniSchedulerApp.TimetableStatus.' + (timetableRef.status ?? 'null')">{{
+              { null: '', DRAFT: 'DRAFT', APPROVED: 'APPROVED', PUBLISHED: 'PUBLISHED' }[timetableRef.status ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="uniSchedulerApp.timetable.createdAt">Created At</span></dt>
+          <dd>
+            <span>{{ timetableRef.createdAt | formatMediumDatetime }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/timetable', timetableRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

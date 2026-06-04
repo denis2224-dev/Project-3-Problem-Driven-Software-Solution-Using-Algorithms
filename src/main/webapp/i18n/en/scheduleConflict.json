@@ -1,0 +1,27 @@
+{
+  "uniSchedulerApp": {
+    "scheduleConflict": {
+      "home": {
+        "title": "Schedule Conflicts",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Schedule Conflict",
+        "createOrEditLabel": "Create or edit a Schedule Conflict",
+        "notFound": "No Schedule Conflicts found"
+      },
+      "created": "A new Schedule Conflict is created with identifier {{ param }}",
+      "updated": "A Schedule Conflict is updated with identifier {{ param }}",
+      "deleted": "A Schedule Conflict is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Schedule Conflict {{ id }}?"
+      },
+      "detail": {
+        "title": "Schedule Conflict"
+      },
+      "id": "ID",
+      "conflictType": "Conflict Type",
+      "description": "Description",
+      "severity": "Severity",
+      "timetableVersion": "Timetable Version"
+    }
+  }
+}

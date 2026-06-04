@@ -22,6 +22,13 @@
     <include file="config/liquibase/changelog/20260604181208_added_entity_CourseEvent.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260604181209_added_entity_Timeslot.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260604181210_added_entity_ProfessorPreference.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181602_added_entity_SolverJob.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181603_added_entity_Timetable.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181604_added_entity_TimetableVersion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181605_added_entity_TimetableEntry.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181606_added_entity_ScheduleConflict.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181607_added_entity_Exam.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181608_added_entity_ExamScheduleEntry.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20260604181202_added_entity_constraints_Department.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260604181204_added_entity_constraints_Room.xml" relativeToChangelogFile="false"/>
@@ -30,6 +37,11 @@
     <include file="config/liquibase/changelog/20260604181207_added_entity_constraints_Course.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260604181208_added_entity_constraints_CourseEvent.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260604181210_added_entity_constraints_ProfessorPreference.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181604_added_entity_constraints_TimetableVersion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181605_added_entity_constraints_TimetableEntry.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181606_added_entity_constraints_ScheduleConflict.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181607_added_entity_constraints_Exam.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260604181608_added_entity_constraints_ExamScheduleEntry.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

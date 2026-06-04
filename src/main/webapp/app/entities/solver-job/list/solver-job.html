@@ -1,0 +1,191 @@
+<div>
+  <h2 id="page-heading" data-cy="SolverJobHeading">
+    <span jhiTranslate="uniSchedulerApp.solverJob.home.title">Solver Jobs</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="uniSchedulerApp.solverJob.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-solver-job"
+        [routerLink]="['/solver-job/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="uniSchedulerApp.solverJob.home.createLabel">Create a new Solver Job</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (solverJobs().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="uniSchedulerApp.solverJob.home.notFound">No Solver Jobs found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="status">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.status">Status</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="startedAt">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.startedAt">Started At</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="finishedAt">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.finishedAt">Finished At</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="progressPercent">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.progressPercent">Progress Percent</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="message">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.message">Message</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="hardConflictCount">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.hardConflictCount">Hard Conflict Count</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="softPenaltyScore">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.softPenaltyScore">Soft Penalty Score</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="backtrackCount">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.backtrackCount">Backtrack Count</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="domainReductionCount">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.domainReductionCount">Domain Reduction Count</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="runtimeMs">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.solverJob.runtimeMs">Runtime Ms</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (solverJob of solverJobs(); track trackId(solverJob)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/solver-job', solverJob.id, 'view']">{{ solverJob.id }}</a>
+              </td>
+              <td [jhiTranslate]="'uniSchedulerApp.SolverJobStatus.' + (solverJob.status ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    CREATED: 'CREATED',
+                    VALIDATING_INPUT: 'VALIDATING_INPUT',
+                    BUILDING_CONFLICT_GRAPH: 'BUILDING_CONFLICT_GRAPH',
+                    RUNNING_WELCH_POWELL: 'RUNNING_WELCH_POWELL',
+                    RUNNING_AC3: 'RUNNING_AC3',
+                    RUNNING_BACKTRACKING: 'RUNNING_BACKTRACKING',
+                    SCORING_SOFT_CONSTRAINTS: 'SCORING_SOFT_CONSTRAINTS',
+                    COMPLETED: 'COMPLETED',
+                    FAILED: 'FAILED',
+                    CANCELLED: 'CANCELLED',
+                  }[solverJob.status ?? 'null']
+                }}
+              </td>
+              <td>{{ solverJob.startedAt | formatMediumDatetime }}</td>
+              <td>{{ solverJob.finishedAt | formatMediumDatetime }}</td>
+              <td>{{ solverJob.progressPercent }}</td>
+              <td>{{ solverJob.message }}</td>
+              <td>{{ solverJob.hardConflictCount }}</td>
+              <td>{{ solverJob.softPenaltyScore }}</td>
+              <td>{{ solverJob.backtrackCount }}</td>
+              <td>{{ solverJob.domainReductionCount }}</td>
+              <td>{{ solverJob.runtimeMs }}</td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/solver-job', solverJob.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a [routerLink]="['/solver-job', solverJob.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(solverJob)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (solverJobs().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,9 @@
+{
+  "uniSchedulerApp": {
+    "ConflictSeverity": {
+      "null": "",
+      "HARD": "HARD",
+      "SOFT": "SOFT"
+    }
+  }
+}

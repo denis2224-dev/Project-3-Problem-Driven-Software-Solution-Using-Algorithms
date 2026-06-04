@@ -1,0 +1,27 @@
+{
+  "uniSchedulerApp": {
+    "examScheduleEntry": {
+      "home": {
+        "title": "Exam Schedule Entries",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Exam Schedule Entry",
+        "createOrEditLabel": "Create or edit a Exam Schedule Entry",
+        "notFound": "No Exam Schedule Entries found"
+      },
+      "created": "A new Exam Schedule Entry is created with identifier {{ param }}",
+      "updated": "A Exam Schedule Entry is updated with identifier {{ param }}",
+      "deleted": "A Exam Schedule Entry is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Exam Schedule Entry {{ id }}?"
+      },
+      "detail": {
+        "title": "Exam Schedule Entry"
+      },
+      "id": "ID",
+      "exam": "Exam",
+      "room": "Room",
+      "timeslot": "Timeslot",
+      "timetableVersion": "Timetable Version"
+    }
+  }
+}

@@ -1,0 +1,157 @@
+<div>
+  <h2 id="page-heading" data-cy="ExamScheduleEntryHeading">
+    <span jhiTranslate="uniSchedulerApp.examScheduleEntry.home.title">Exam Schedule Entries</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="uniSchedulerApp.examScheduleEntry.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-exam-schedule-entry"
+        [routerLink]="['/exam-schedule-entry/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="uniSchedulerApp.examScheduleEntry.home.createLabel">Create a new Exam Schedule Entry</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (examScheduleEntries().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="uniSchedulerApp.examScheduleEntry.home.notFound">No Exam Schedule Entries found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="exam.name">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.examScheduleEntry.exam">Exam</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="room.code">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.examScheduleEntry.room">Room</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="timeslot.startTime">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.examScheduleEntry.timeslot">Timeslot</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="timetableVersion.versionNumber">
+              <div class="d-flex">
+                <span jhiTranslate="uniSchedulerApp.examScheduleEntry.timetableVersion">Timetable Version</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (examScheduleEntry of examScheduleEntries(); track trackId(examScheduleEntry)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/exam-schedule-entry', examScheduleEntry.id, 'view']">{{ examScheduleEntry.id }}</a>
+              </td>
+              <td>
+                @if (examScheduleEntry.exam) {
+                  <div>
+                    <a [routerLink]="['/exam', examScheduleEntry.exam.id, 'view']">{{ examScheduleEntry.exam.name }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (examScheduleEntry.room) {
+                  <div>
+                    <a [routerLink]="['/room', examScheduleEntry.room.id, 'view']">{{ examScheduleEntry.room.code }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (examScheduleEntry.timeslot) {
+                  <div>
+                    <a [routerLink]="['/timeslot', examScheduleEntry.timeslot.id, 'view']">{{ examScheduleEntry.timeslot.startTime }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (examScheduleEntry.timetableVersion) {
+                  <div>
+                    <a [routerLink]="['/timetable-version', examScheduleEntry.timetableVersion.id, 'view']">{{
+                      examScheduleEntry.timetableVersion.versionNumber
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/exam-schedule-entry', examScheduleEntry.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/exam-schedule-entry', examScheduleEntry.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(examScheduleEntry)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (examScheduleEntries().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

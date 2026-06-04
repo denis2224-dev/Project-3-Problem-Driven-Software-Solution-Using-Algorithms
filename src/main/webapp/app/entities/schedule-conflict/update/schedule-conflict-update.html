@@ -1,0 +1,134 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-schedule-conflict-heading"
+        data-cy="ScheduleConflictCreateUpdateHeading"
+        jhiTranslate="uniSchedulerApp.scheduleConflict.home.createOrEditLabel"
+      >
+        Create or edit a Schedule Conflict
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let conflictTypeRef = editForm.get('conflictType')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_conflictType" jhiTranslate="uniSchedulerApp.scheduleConflict.conflictType"
+            >Conflict Type</label
+          >
+          <select class="form-control" name="conflictType" formControlName="conflictType" id="field_conflictType" data-cy="conflictType">
+            <option [ngValue]="null">{{ 'uniSchedulerApp.ConflictType.null' | translate }}</option>
+            @for (conflictType of conflictTypeValues; track $index) {
+              <option [value]="conflictType">{{ 'uniSchedulerApp.ConflictType.' + conflictType | translate }}</option>
+            }
+          </select>
+          @if (conflictTypeRef.invalid && (conflictTypeRef.dirty || conflictTypeRef.touched)) {
+            <div>
+              @if (editForm.get('conflictType')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let descriptionRef = editForm.get('description')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_description" jhiTranslate="uniSchedulerApp.scheduleConflict.description">Description</label>
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          />
+          @if (descriptionRef.invalid && (descriptionRef.dirty || descriptionRef.touched)) {
+            <div>
+              @if (editForm.get('description')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              @if (editForm.get('description')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '2000' }"
+                  >This field cannot be longer than 2000 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let severityRef = editForm.get('severity')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_severity" jhiTranslate="uniSchedulerApp.scheduleConflict.severity">Severity</label>
+          <select class="form-control" name="severity" formControlName="severity" id="field_severity" data-cy="severity">
+            <option [ngValue]="null">{{ 'uniSchedulerApp.ConflictSeverity.null' | translate }}</option>
+            @for (conflictSeverity of conflictSeverityValues; track $index) {
+              <option [value]="conflictSeverity">{{ 'uniSchedulerApp.ConflictSeverity.' + conflictSeverity | translate }}</option>
+            }
+          </select>
+          @if (severityRef.invalid && (severityRef.dirty || severityRef.touched)) {
+            <div>
+              @if (editForm.get('severity')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_timetableVersion" jhiTranslate="uniSchedulerApp.scheduleConflict.timetableVersion"
+            >Timetable Version</label
+          >
+          <select
+            class="form-control"
+            id="field_timetableVersion"
+            data-cy="timetableVersion"
+            name="timetableVersion"
+            formControlName="timetableVersion"
+            [compareWith]="compareTimetableVersion"
+          >
+            @if (!editForm.get('timetableVersion')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (timetableVersionOption of timetableVersionsSharedCollection(); track $index) {
+              <option [ngValue]="timetableVersionOption">{{ timetableVersionOption.versionNumber }}</option>
+            }
+          </select>
+        </div>
+        @if (
+          editForm.get(['timetableVersion'])!.invalid &&
+          (editForm.get(['timetableVersion'])!.dirty || editForm.get(['timetableVersion'])!.touched)
+        ) {
+          <div>
+            @if (editForm.get(['timetableVersion'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
