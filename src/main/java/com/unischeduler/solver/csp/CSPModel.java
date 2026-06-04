@@ -41,6 +41,10 @@ public class CSPModel {
         return domain;
     }
 
+    public void restrictDomain(CSPVariable variable, Collection<CSPValue> values) {
+        getDomain(variable).replaceValues(values);
+    }
+
     public List<CSPConstraint> getConstraints() {
         return Collections.unmodifiableList(constraints);
     }

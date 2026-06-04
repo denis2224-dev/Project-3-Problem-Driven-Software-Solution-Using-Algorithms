@@ -31,6 +31,11 @@ public class Domain {
         return values.remove(value);
     }
 
+    public void replaceValues(Collection<CSPValue> newValues) {
+        values.clear();
+        values.addAll(Objects.requireNonNull(newValues, "newValues must not be null"));
+    }
+
     public boolean contains(CSPValue value) {
         return values.contains(value);
     }
