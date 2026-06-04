@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { signal } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -19,9 +21,13 @@ describe('Home Component', () => {
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot()],
       providers: [
+        provideHttpClient(),
+        provideRouter([]),
         {
           provide: AccountService,
           useValue: {
+            account: signal(null),
+            identity: vitest.fn(() => of(null)),
             isAuthenticated: vitest.fn(),
           },
         },
