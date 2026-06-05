@@ -85,7 +85,58 @@ Exam entities:
 - Exam
 - ExamScheduleEntry
 
-## How To Run Locally
+## Run With Docker
+
+The complete demo environment is dockerized. A professor or teammate can clone the repository and start the application without installing Java, Maven, Node.js, npm, or PostgreSQL locally.
+
+Start everything:
+
+```bash
+docker compose up --build
+```
+
+Expected containers:
+
+- `postgres`: PostgreSQL database with a persistent Docker volume.
+- `backend`: Spring Boot API, Liquibase migrations, authentication, solver jobs, and Java solver core.
+- `frontend`: Angular production build served by nginx and reverse-proxied to the backend.
+
+Open the application:
+
+```text
+http://localhost:4200
+```
+
+Useful direct endpoints:
+
+```text
+Backend API: http://localhost:8080
+Health:      http://localhost:8080/management/health
+```
+
+Stop the stack:
+
+```bash
+docker compose down
+```
+
+Stop the stack and remove the PostgreSQL volume:
+
+```bash
+docker compose down -v
+```
+
+Docker environment variables can be overridden through a local `.env` file. Start from the committed template:
+
+```bash
+cp .env.example .env
+```
+
+Real `.env` files are ignored by Git. The defaults in `docker-compose.yml` are local-demo values only and must be replaced for any shared deployment.
+
+Security note: the default Docker stack uses PostgreSQL trust authentication and JHipster's `secret-samples` profile only to make a local university demo start with one command. Do not use those defaults for production or shared infrastructure.
+
+## How To Run Locally Without Full Docker
 
 Prerequisites:
 

@@ -129,6 +129,13 @@ Desktop.ini
 /src/main/resources/config/tls/*.p12
 
 ######################
+# Local environment files
+######################
+.env
+.env.*
+!.env.example
+
+######################
 # Others
 ######################
 *.class
