@@ -60,17 +60,6 @@ interface SolverResultView {
   imports: [NgClass, RouterLink],
 })
 export default class DemoScenario implements OnDestroy {
-  readonly stages = [
-    'CREATED',
-    'VALIDATING_INPUT',
-    'BUILDING_CONFLICT_GRAPH',
-    'RUNNING_WELCH_POWELL',
-    'RUNNING_AC3',
-    'RUNNING_BACKTRACKING',
-    'SCORING_SOFT_CONSTRAINTS',
-    'COMPLETED',
-  ];
-
   readonly summary = signal<DemoDataSummary | null>(null);
   readonly job = signal<SolverJobView | null>(null);
   readonly statistics = signal<SolverStatisticsView | null>(null);
@@ -148,21 +137,8 @@ export default class DemoScenario implements OnDestroy {
       });
   }
 
-  stageState(stage: string): string {
-    const status = this.job()?.status ?? 'CREATED';
-    if (status === 'FAILED' || status === 'CANCELLED') {
-      return stage === status ? 'active' : 'pending';
-    }
-    const currentIndex = this.stages.indexOf(status);
-    const stageIndex = this.stages.indexOf(stage);
-    if (stageIndex < currentIndex) {
-      return 'done';
-    }
-    return stageIndex === currentIndex ? 'active' : 'pending';
-  }
-
-  formatStage(stage: string): string {
-    return stage.replaceAll('_', ' ');
+  formatStage(stage: string | null | undefined): string {
+    return (stage ?? 'CREATED').replaceAll('_', ' ');
   }
 
   private pollJob(jobId: number): void {

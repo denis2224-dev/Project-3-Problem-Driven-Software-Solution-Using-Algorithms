@@ -1,30 +1,16 @@
 <section class="algorithm-page">
-  <header class="algorithm-hero">
+  <header class="algorithm-hero compact-hero">
     <p class="eyebrow">Algorithmic core</p>
-    <h1>How the scheduler solves the CSP</h1>
-    <p>
-      The system does not delegate scheduling to a black-box optimization library. The graph coloring, AC-3 propagation, MRV, LCV, MAC
-      backtracking, and soft scoring logic are implemented manually in Java for the algorithms course demo.
-    </p>
+    <h1>How the solver works</h1>
+    <p>Custom Java algorithms build a CSP, prune domains with AC-3, and search valid room-timeslot assignments with MAC backtracking.</p>
     <div class="algorithm-actions">
-      <a class="neon-button primary" routerLink="/demo-scenario">Run demo scenario</a>
-      <a class="neon-button ghost" routerLink="/timetable-view">Open weekly view</a>
+      <a class="neon-button primary" routerLink="/demo-scenario">Run demo</a>
     </div>
   </header>
 
-  <div class="algorithm-pipeline">
-    <span>Raw input</span>
-    <span>Conflict graph</span>
-    <span>Welsh-Powell</span>
-    <span>CSP domains</span>
-    <span>AC-3</span>
-    <span>MAC search</span>
-    <span>Final timetable</span>
-  </div>
-
   <div class="algorithm-card-grid">
     @for (algorithm of algorithms; track algorithm.title) {
-      <article class="algorithm-card">
+      <article class="algorithm-card compact-card">
         <h2>{{ algorithm.title }}</h2>
         <p>{{ algorithm.purpose }}</p>
         <div class="complexity-pill">{{ algorithm.complexity }}</div>

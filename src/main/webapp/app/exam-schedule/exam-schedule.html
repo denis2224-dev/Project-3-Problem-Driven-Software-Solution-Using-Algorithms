@@ -1,17 +1,13 @@
 <section class="exam-page">
-  <header class="exam-hero">
+  <header class="exam-hero compact-hero">
     <p class="eyebrow">Exam graph coloring</p>
-    <h1>Conflict-free exam schedule preview</h1>
-    <p>
-      Exams are vertices. Shared student groups create conflict edges. Welsh-Powell colors the graph so adjacent exams receive different
-      exam periods.
-    </p>
+    <h1>Exam schedule preview</h1>
+    <p>Welsh-Powell colors exams so shared student groups do not receive overlapping exam periods.</p>
     <div class="exam-actions">
       <button class="neon-button primary" type="button" (click)="loadColoring()" [disabled]="loading()">
         {{ loading() ? 'Loading...' : 'Refresh coloring' }}
       </button>
       <a class="neon-button ghost" routerLink="/demo-scenario">Load demo data</a>
-      <a class="neon-button flat" routerLink="/algorithms">Explain algorithm</a>
     </div>
   </header>
 
@@ -20,34 +16,34 @@
   }
 
   @if (result(); as coloring) {
-    <div class="exam-summary">
+    <div class="exam-summary lean-summary">
       <div>
         <strong>{{ coloring.examCount }}</strong>
         <span>Exams</span>
       </div>
       <div>
         <strong>{{ coloring.colorCount }}</strong>
-        <span>Exam periods</span>
+        <span>Periods</span>
       </div>
       <div>
         <strong>{{ coloring.conflictEdgeCount }}</strong>
-        <span>Conflict edges</span>
+        <span>Edges</span>
       </div>
       <div>
-        <strong>{{ coloring.conflictFree ? 'YES' : 'NO' }}</strong>
+        <strong>{{ coloring.conflictFree ? 'Yes' : 'No' }}</strong>
         <span>Conflict free</span>
       </div>
     </div>
 
     <div class="exam-period-grid">
       @for (period of periods(); track period.color) {
-        <article class="exam-period-card">
+        <article class="exam-period-card compact-card">
           <div class="section-heading">
             <span>{{ period.period }}</span>
             <span class="complexity">Color {{ period.color }}</span>
           </div>
           @for (entry of period.entries; track entry.examId) {
-            <div class="exam-chip">
+            <div class="exam-chip" [title]="entry.examName ?? ''">
               <strong>{{ entry.courseCode }}</strong>
               <span>{{ entry.examName }}</span>
               <small>{{ entry.studentGroupName }}</small>

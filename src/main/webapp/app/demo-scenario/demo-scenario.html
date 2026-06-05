@@ -1,22 +1,15 @@
 <section class="demo-page">
-  <header class="demo-hero">
+  <header class="demo-hero compact-hero">
     <p class="eyebrow">FAF department demo</p>
-    <h1>Generate schedule for FAF department</h1>
-    <p>
-      Load a rich university dataset, start the asynchronous Java solver, watch every algorithm stage, then inspect the stored timetable
-      version in the weekly grid.
-    </p>
+    <h1>Generate timetable</h1>
+    <p>Load the prepared university dataset and start the asynchronous Java solver. The result is stored as a timetable version.</p>
     <div class="demo-actions">
-      <button class="neon-button primary" type="button" (click)="loadDemoData()" [disabled]="loadingDemo() || generating()">
-        {{ loadingDemo() ? 'Loading demo data...' : 'Load demo data' }}
+      <button class="neon-button primary" type="button" (click)="generateTimetable()" [disabled]="generating() || loadingDemo()">
+        {{ generating() ? 'Generating...' : 'Generate timetable' }}
       </button>
-      <button class="neon-button ghost" type="button" (click)="generateTimetable()" [disabled]="generating() || loadingDemo()">
-        {{ generating() ? 'Solver running...' : 'Generate timetable' }}
+      <button class="neon-button ghost" type="button" (click)="loadDemoData()" [disabled]="loadingDemo() || generating()">
+        {{ loadingDemo() ? 'Loading...' : 'Load demo data' }}
       </button>
-      <button class="neon-button flat" type="button" (click)="clearDemoData()" [disabled]="loadingDemo() || generating()">
-        Clear demo data
-      </button>
-      <a class="neon-button flat" routerLink="/algorithms">Explain algorithms</a>
     </div>
   </header>
 
@@ -24,121 +17,82 @@
     <div class="demo-alert">{{ message }}</div>
   }
 
-  <div class="demo-layout">
-    <article class="demo-card">
-      <div class="section-heading">
-        <span>Input summary</span>
-        <span class="complexity">Real endpoint: /api/demo-data/load</span>
-      </div>
-      @if (summary(); as data) {
-        <div class="demo-summary-grid">
-          <div>
-            <strong>{{ data.faculties }}</strong
-            ><span>Faculty</span>
-          </div>
-          <div>
-            <strong>{{ data.departments }}</strong
-            ><span>Departments</span>
-          </div>
-          <div>
-            <strong>{{ data.rooms }}</strong
-            ><span>Rooms</span>
-          </div>
-          <div>
-            <strong>{{ data.professors }}</strong
-            ><span>Professors</span>
-          </div>
-          <div>
-            <strong>{{ data.studentGroups }}</strong
-            ><span>Groups</span>
-          </div>
-          <div>
-            <strong>{{ data.courses }}</strong
-            ><span>Courses</span>
-          </div>
-          <div>
-            <strong>{{ data.courseEvents }}</strong
-            ><span>Events</span>
-          </div>
-          <div>
-            <strong>{{ data.timeslots }}</strong
-            ><span>Timeslots</span>
-          </div>
-        </div>
-        <p class="job-message">{{ data.message }}</p>
-      } @else {
-        <p class="empty-state">No demo data summary loaded yet. Use the Load Demo Data button as admin.</p>
-      }
-    </article>
-
-    <article class="demo-card">
+  <div class="demo-layout compact">
+    <article class="demo-card compact-card">
       <div class="section-heading">
         <span>Solver status</span>
         @if (job(); as currentJob) {
           <span class="status-pill" [ngClass]="currentJob.status?.toLowerCase() ?? 'created'">{{ currentJob.status }}</span>
         }
       </div>
+
       <div class="progress-wrap">
         <div class="progress-label">
-          <span>Progress</span>
+          <span>{{ formatStage(job()?.status) }}</span>
           <strong>{{ job()?.progressPercent ?? 0 }}%</strong>
         </div>
         <div class="progress-track"><span [style.width.%]="job()?.progressPercent ?? 0"></span></div>
       </div>
-      <ol class="stage-list">
-        @for (stage of stages; track stage) {
-          <li [ngClass]="stageState(stage)">{{ formatStage(stage) }}</li>
-        }
-      </ol>
-      <p class="job-message">{{ job()?.message ?? 'Start a solver job to see live orchestration stages.' }}</p>
-    </article>
-  </div>
 
-  <div class="demo-layout compact">
-    <article class="demo-card">
-      <div class="section-heading">
-        <span>Solver statistics</span>
-        <span class="complexity">Real endpoint: /api/solver-jobs/id/statistics</span>
-      </div>
-      <div class="demo-summary-grid stats">
-        <div>
-          <strong>{{ statistics()?.hardConflictCount ?? job()?.hardConflictCount ?? 0 }}</strong
-          ><span>Hard conflicts</span>
-        </div>
-        <div>
-          <strong>{{ statistics()?.softPenaltyScore ?? job()?.softPenaltyScore ?? 0 }}</strong
-          ><span>Soft penalty</span>
-        </div>
-        <div>
-          <strong>{{ statistics()?.backtrackCount ?? job()?.backtrackCount ?? 0 }}</strong
-          ><span>Backtracks</span>
-        </div>
-        <div>
-          <strong>{{ statistics()?.domainReductionCount ?? job()?.domainReductionCount ?? 0 }}</strong
-          ><span>Domain cuts</span>
-        </div>
-        <div>
-          <strong>{{ statistics()?.runtimeMs ?? job()?.runtimeMs ?? 0 }}</strong
-          ><span>Runtime ms</span>
-        </div>
-      </div>
+      <p class="job-message">{{ job()?.message ?? 'Load demo data, then generate a timetable.' }}</p>
     </article>
 
-    <article class="demo-card">
+    <article class="demo-card compact-card">
       <div class="section-heading">
-        <span>Generated result</span>
-        <span class="complexity">Conflicts = {{ result()?.totalHardConflicts ?? job()?.hardConflictCount ?? 0 }}</span>
+        <span>Demo data</span>
       </div>
-      @if (result(); as output) {
-        <p class="job-message">
-          {{ output.timetableName ?? 'Generated timetable' }} contains {{ output.entries?.length ?? 0 }} persisted timetable entries.
-        </p>
-        @if (output.timetableVersionId) {
-          <a class="neon-button primary" routerLink="/timetable-view">Open weekly timetable</a>
-        }
+      @if (summary(); as data) {
+        <div class="demo-summary-grid lean-summary">
+          <div>
+            <strong>{{ data.courseEvents }}</strong>
+            <span>Events</span>
+          </div>
+          <div>
+            <strong>{{ data.professors }}</strong>
+            <span>Professors</span>
+          </div>
+          <div>
+            <strong>{{ data.rooms }}</strong>
+            <span>Rooms</span>
+          </div>
+          <div>
+            <strong>{{ data.timeslots }}</strong>
+            <span>Timeslots</span>
+          </div>
+        </div>
+        <p class="job-message">{{ data.message }}</p>
       } @else {
-        <p class="empty-state">The result appears after the asynchronous solver reaches COMPLETED.</p>
+        <p class="empty-state">No demo data loaded in this session.</p>
       }
     </article>
   </div>
+
+  @if (job()?.status === 'COMPLETED') {
+    <article class="demo-card compact-card">
+      <div class="section-heading">
+        <span>Result</span>
+        <span class="complexity">Conflicts {{ result()?.totalHardConflicts ?? job()?.hardConflictCount ?? 0 }}</span>
+      </div>
+      <div class="solver-stats compact-stats">
+        <div>
+          <dt>Soft penalty</dt>
+          <dd>{{ statistics()?.softPenaltyScore ?? job()?.softPenaltyScore ?? 0 }}</dd>
+        </div>
+        <div>
+          <dt>Domain cuts</dt>
+          <dd>{{ statistics()?.domainReductionCount ?? job()?.domainReductionCount ?? 0 }}</dd>
+        </div>
+        <div>
+          <dt>Runtime</dt>
+          <dd>{{ statistics()?.runtimeMs ?? job()?.runtimeMs ?? 0 }} ms</dd>
+        </div>
+      </div>
+      <p class="job-message">
+        {{ result()?.timetableName ?? 'Generated timetable' }} contains {{ result()?.entries?.length ?? 0 }} persisted entries.
+      </p>
+      @if (result()?.timetableVersionId) {
+        <a class="neon-button primary" routerLink="/timetable-view">Open timetable</a>
+      }
+    </article>
+  }
 </section>

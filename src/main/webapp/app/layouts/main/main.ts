@@ -4,8 +4,6 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import dayjs from 'dayjs/esm';
 
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import { AccountService } from 'app/core/auth/account.service';
 import Footer from '../footer/footer';
@@ -16,7 +14,7 @@ import PageRibbon from '../profiles/page-ribbon';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './main.html',
   providers: [AppPageTitleStrategy],
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FontAwesomeModule, Footer, PageRibbon],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Footer, PageRibbon],
 })
 export default class Main implements OnInit {
   private readonly renderer: Renderer2;

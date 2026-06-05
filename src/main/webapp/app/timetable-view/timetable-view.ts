@@ -126,6 +126,12 @@ export default class TimetableView implements OnInit {
     return day.charAt(0) + day.slice(1).toLowerCase();
   }
 
+  fullEntryTitle(entry: TimetableEntryView): string {
+    return [entry.courseCode, entry.courseName, entry.professorName, entry.studentGroupName, entry.roomCode, entry.buildingCode]
+      .filter(Boolean)
+      .join(' | ');
+  }
+
   downloadCsv(versionId: number): void {
     this.error.set(null);
     this.actionMessage.set(null);

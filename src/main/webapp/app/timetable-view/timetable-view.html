@@ -1,22 +1,13 @@
 <section class="weekly-view-shell">
-  <header class="weekly-hero">
+  <header class="weekly-hero compact-hero">
     <div>
       <p class="eyebrow">Stored timetable version</p>
-      <h1>Weekly timetable grid</h1>
-      <p>
-        Select a generated timetable version and inspect the persisted room-timeslot assignments produced by Welsh-Powell warm start, AC-3
-        pruning, and MAC backtracking.
-      </p>
+      <h1>Weekly timetable</h1>
+      <p>Select a generated version and review the persisted room-timeslot assignments.</p>
     </div>
     <div class="weekly-actions">
-      <a class="neon-button ghost" routerLink="/solver-job">Solver jobs</a>
       @if (selectedVersion(); as version) {
-        <a class="neon-button primary" [routerLink]="['/timetable-version', version.id, 'view']">Version details</a>
         <button class="neon-button ghost" type="button" (click)="downloadCsv(version.id)">Export CSV</button>
-        @if (version.timetable?.id) {
-          <button class="neon-button flat" type="button" (click)="approveTimetable(version.timetable?.id)">Approve</button>
-          <button class="neon-button flat" type="button" (click)="publishTimetable(version.timetable?.id)">Publish</button>
-        }
       }
       <button class="neon-button flat" type="button" (click)="loadVersions()" [disabled]="loading()">
         {{ loading() ? 'Loading...' : 'Refresh' }}
@@ -29,8 +20,8 @@
     <select id="version-select" class="form-select" [value]="selectedVersionId() ?? ''" (change)="selectVersion($event)">
       @for (version of versions(); track version.id) {
         <option [value]="version.id">
-          {{ version.timetable?.name ?? 'Timetable' }} - v{{ version.versionNumber ?? version.id }} - penalty
-          {{ version.totalSoftPenalty ?? 0 }} - conflicts {{ version.totalHardConflicts ?? 0 }}
+          {{ version.timetable?.name ?? 'Timetable' }} v{{ version.versionNumber ?? version.id }} | penalty
+          {{ version.totalSoftPenalty ?? 0 }} | conflicts {{ version.totalHardConflicts ?? 0 }}
         </option>
       }
     </select>
@@ -47,21 +38,21 @@
   @if (versions().length === 0 && !loading()) {
     <article class="weekly-empty">
       <h2>No timetable version exists yet</h2>
-      <p>Load demo data and generate a timetable from the solver jobs page, then return here to view the weekly grid.</p>
-      <a class="neon-button primary" routerLink="/solver-job">Open solver jobs</a>
+      <p>Load demo data and generate a timetable first.</p>
+      <a class="neon-button primary" routerLink="/demo-scenario">Generate timetable</a>
     </article>
   } @else {
-    <div class="weekly-summary">
+    <div class="weekly-summary lean-summary">
       <div>
         <span>Entries</span>
         <strong>{{ entries().length }}</strong>
       </div>
       <div>
-        <span>Hard conflicts</span>
+        <span>Conflicts</span>
         <strong>{{ selectedVersion()?.totalHardConflicts ?? 0 }}</strong>
       </div>
       <div>
-        <span>Soft penalty</span>
+        <span>Penalty</span>
         <strong>{{ selectedVersion()?.totalSoftPenalty ?? 0 }}</strong>
       </div>
     </div>
@@ -80,18 +71,15 @@
           @for (day of days; track day) {
             <div class="schedule-cell">
               @let cellEntries = entriesFor(day, row);
-              @if (cellEntries.length === 0) {
-                <span class="cell-empty">Available</span>
-              }
               @for (entry of cellEntries; track entry.timetableEntryId) {
-                <article class="event-card" [ngClass]="eventTypeClass(entry.eventType)">
+                <article class="event-card" [ngClass]="eventTypeClass(entry.eventType)" [title]="fullEntryTitle(entry)">
                   <div class="event-topline">
                     <strong>{{ entry.courseCode }}</strong>
                     <span>{{ entry.eventType }}</span>
                   </div>
                   <h3>{{ entry.courseName }}</h3>
                   <p>{{ entry.professorName }}</p>
-                  <p>{{ entry.studentGroupName }} - {{ entry.roomCode }} - {{ entry.buildingCode }}</p>
+                  <p>{{ entry.studentGroupName }} | {{ entry.roomCode }}</p>
                 </article>
               }
             </div>

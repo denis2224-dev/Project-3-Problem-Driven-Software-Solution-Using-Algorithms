@@ -1,123 +1,83 @@
 <section class="dashboard-shell">
-  <div class="hero-panel">
+  <header class="hero-panel compact-hero">
     <div class="hero-copy">
       <p class="eyebrow">Algorithms Analysis and Implementation</p>
-      <h1>Automated University Timetabling and Exam Scheduling</h1>
+      <h1>University timetable solver</h1>
       <p class="hero-text">
-        A modular Spring Boot and Angular system where graph coloring, AC-3 propagation, MRV, LCV, and MAC backtracking build real timetable
-        versions from university data.
+        Generate conflict-free weekly timetables using a custom Java solver with graph coloring, AC-3 propagation, MRV, LCV, and MAC
+        backtracking.
       </p>
 
       <div class="hero-actions">
         @if (account() !== null) {
-          <a class="neon-button primary" routerLink="/solver-job">Open solver jobs</a>
-          <a class="neon-button ghost" routerLink="/demo-scenario">Run FAF demo</a>
-          <a class="neon-button ghost" routerLink="/algorithms">Explain algorithms</a>
-          <a class="neon-button ghost" routerLink="/course-event">Review course events</a>
-          <a class="neon-button ghost" routerLink="/timetable-view">View weekly timetable</a>
-          <a class="neon-button ghost" routerLink="/exam-schedule">View exam schedule</a>
-          <button class="neon-button flat" type="button" (click)="loadDashboard()" [disabled]="loading()">
-            {{ loading() ? 'Refreshing...' : 'Refresh dashboard' }}
-          </button>
+          <a class="neon-button primary" routerLink="/demo-scenario">Generate timetable</a>
+          <a class="neon-button ghost" routerLink="/timetable-view">View timetable</a>
         } @else {
-          <button class="neon-button primary" type="button" (click)="login()">Sign in to view dashboard</button>
+          <button class="neon-button primary" type="button" (click)="login()">Sign in</button>
         }
       </div>
     </div>
-
-    <div class="algorithm-orbit" aria-label="Algorithm pipeline">
-      <span class="orbit-ring"></span>
-      <div class="orbit-card graph">Conflict graph</div>
-      <div class="orbit-card color">Welsh-Powell</div>
-      <div class="orbit-card ac3">AC-3</div>
-      <div class="orbit-card mac">MAC search</div>
-    </div>
-  </div>
+  </header>
 
   @if (account() !== null) {
-    <div class="metric-grid">
+    <div class="metric-grid compact-metrics">
       @for (metric of metrics(); track metric.label) {
-        <a class="metric-card" [ngClass]="metric.accent" [routerLink]="metric.route">
-          <span class="metric-topline">
-            <span class="metric-label">{{ metric.label }}</span>
-            <span class="metric-icon"><fa-icon [icon]="metric.icon" /></span>
-          </span>
+        <a class="metric-card" [routerLink]="metric.route">
+          <span class="metric-label">{{ metric.label }}</span>
           <strong>{{ metric.value }}</strong>
           <span class="metric-detail">{{ metric.detail }}</span>
         </a>
       }
     </div>
 
-    <div class="dashboard-grid">
-      <article class="solver-card">
-        <div class="section-heading">
-          <span>Latest solver job</span>
-          @if (latestJob(); as job) {
-            <span class="status-pill" [ngClass]="statusClass(job.status)">{{ job.status ?? 'UNKNOWN' }}</span>
-          } @else {
-            <span class="status-pill no-job">NO JOB</span>
-          }
-        </div>
-
+    <article class="solver-card compact-card">
+      <div class="section-heading">
+        <span>Latest solver job</span>
         @if (latestJob(); as job) {
-          <div class="progress-wrap">
-            <div class="progress-label">
-              <span>Progress</span>
-              <strong>{{ job.progressPercent ?? 0 }}%</strong>
-            </div>
-            <div class="progress-track">
-              <span [style.width.%]="job.progressPercent ?? 0"></span>
-            </div>
-          </div>
-
-          <dl class="solver-stats">
-            <div>
-              <dt>Soft penalty</dt>
-              <dd>{{ job.softPenaltyScore ?? 0 }}</dd>
-            </div>
-            <div>
-              <dt>Hard conflicts</dt>
-              <dd>{{ job.hardConflictCount ?? 0 }}</dd>
-            </div>
-            <div>
-              <dt>Backtracks</dt>
-              <dd>{{ job.backtrackCount ?? 0 }}</dd>
-            </div>
-            <div>
-              <dt>Domain cuts</dt>
-              <dd>{{ job.domainReductionCount ?? 0 }}</dd>
-            </div>
-          </dl>
-
-          <p class="job-message">{{ job.message ?? 'No solver message available.' }}</p>
+          <span class="status-pill" [ngClass]="statusClass(job.status)">{{ job.status ?? 'UNKNOWN' }}</span>
         } @else {
-          <p class="empty-state">No solver job exists yet. Load demo data later, then generate a timetable from the solver page.</p>
+          <span class="status-pill no-job">NO JOB</span>
         }
-      </article>
+      </div>
 
-      <article class="pipeline-card">
-        <div class="section-heading">
-          <span>Algorithm pipeline</span>
-          <span class="complexity">CSP P = (X, D, C)</span>
+      @if (latestJob(); as job) {
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>Progress</span>
+            <strong>{{ job.progressPercent ?? 0 }}%</strong>
+          </div>
+          <div class="progress-track"><span [style.width.%]="job.progressPercent ?? 0"></span></div>
         </div>
-        <ol>
-          <li><strong>Conflict graph:</strong> vertices are course events, edges are same-timeslot clashes.</li>
-          <li><strong>Welsh-Powell:</strong> colors high-degree vertices first to produce timeslot warm starts.</li>
-          <li><strong>AC-3:</strong> prunes unsupported timeslot-room values from domains.</li>
-          <li><strong>MAC backtracking:</strong> uses MRV and LCV while enforcing hard constraints.</li>
-          <li><strong>Soft scoring:</strong> measures gaps, preferences, transitions, and edge-hour overload.</li>
-        </ol>
-      </article>
-    </div>
+
+        <dl class="solver-stats compact-stats">
+          <div>
+            <dt>Timetable score</dt>
+            <dd>{{ job.softPenaltyScore ?? 0 }}</dd>
+          </div>
+          <div>
+            <dt>Hard conflicts</dt>
+            <dd>{{ job.hardConflictCount ?? 0 }}</dd>
+          </div>
+          <div>
+            <dt>Runtime</dt>
+            <dd>{{ job.runtimeMs ?? 0 }} ms</dd>
+          </div>
+        </dl>
+
+        <p class="job-message">{{ job.message ?? 'No solver message available.' }}</p>
+      } @else {
+        <p class="empty-state">No solver job exists yet. Load demo data and generate a timetable from the solver page.</p>
+      }
+    </article>
 
     @if (dashboardError(); as error) {
       <div class="dashboard-error">{{ error }}</div>
     }
   } @else {
-    <div class="signin-panel">
-      <h2>Use the secured university demo workspace</h2>
-      <p>Sign in with the generated JHipster admin or user account to manage data and run solver jobs.</p>
+    <article class="signin-panel compact-card">
+      <h2>Secured university demo workspace</h2>
+      <p>Sign in with the JHipster admin account to load demo data and run timetable generation.</p>
       <button class="neon-button primary" type="button" (click)="login()">Sign in</button>
-    </div>
+    </article>
   }
 </section>
