@@ -18,8 +18,8 @@ public class LCVValueOrdering {
             .getDomain(variable)
             .getValues()
             .stream()
-            // LCV tries values that eliminate the fewest values from neighboring unassigned variables first.
-            .sorted(Comparator.comparingInt((CSPValue value) -> eliminationScore(model, variable, value, assignment)).thenComparing(CSPValue::getId))
+            // LCV tries values that eliminate the fewest values first. Java's stable sort preserves the domain warm-start order on ties.
+            .sorted(Comparator.comparingInt((CSPValue value) -> eliminationScore(model, variable, value, assignment)))
             .toList();
     }
 
@@ -40,7 +40,13 @@ public class LCVValueOrdering {
         return score;
     }
 
-    private boolean satisfiesConstraints(CSPModel model, CSPVariable variable, CSPValue value, CSPVariable neighbor, CSPValue neighborValue) {
+    private boolean satisfiesConstraints(
+        CSPModel model,
+        CSPVariable variable,
+        CSPValue value,
+        CSPVariable neighbor,
+        CSPValue neighborValue
+    ) {
         for (CSPConstraint constraint : model.constraintsBetween(variable, neighbor)) {
             if (!constraint.isSatisfied(variable, value, neighbor, neighborValue)) {
                 return false;

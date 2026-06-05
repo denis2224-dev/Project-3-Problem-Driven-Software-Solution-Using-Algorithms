@@ -21,6 +21,7 @@ public class DemoDataService {
 
     private static final String PROJECTOR = "projector";
     private static final String WHITEBOARD = "whiteboard";
+    private static final int EVENTS_PER_STUDENT_GROUP = 8;
 
     private final FacultyRepository facultyRepository;
     private final DepartmentRepository departmentRepository;
@@ -81,9 +82,7 @@ public class DemoDataService {
     public DemoDataSummaryDTO load() {
         clear();
 
-        Faculty faculty = facultyRepository.save(
-            new Faculty().name("Faculty of Computers, Informatics and Microelectronics").code("FCIM")
-        );
+        Faculty faculty = facultyRepository.save(new Faculty().name("Faculty of Computers, Informatics and Microelectronics").code("FCIM"));
 
         List<Department> departments = departmentRepository.saveAll(
             List.of(
@@ -206,7 +205,12 @@ public class DemoDataService {
                 professor("Vlad", "Ionescu", "vlad.ionescu@unischeduler.edu", "Senior Lecturer", ci),
                 professor("Ana", "Rotaru", "ana.rotaru@unischeduler.edu", "Associate Professor", ci),
                 professor("Cristian", "Botezatu", "cristian.botezatu@unischeduler.edu", "Lecturer", ci),
-                professor("Livia", "Dumitrescu", "livia.dumitrescu@unischeduler.edu", "Professor", ci)
+                professor("Livia", "Dumitrescu", "livia.dumitrescu@unischeduler.edu", "Professor", ci),
+                professor("Radu", "Moraru", "radu.moraru@unischeduler.edu", "Associate Professor", faf),
+                professor("Tatiana", "Cojocaru", "tatiana.cojocaru@unischeduler.edu", "Senior Lecturer", faf),
+                professor("Ion", "Postica", "ion.postica@unischeduler.edu", "Lecturer", faf),
+                professor("Sanda", "Ursu", "sanda.ursu@unischeduler.edu", "Associate Professor", ci),
+                professor("Eugen", "Ciobanu", "eugen.ciobanu@unischeduler.edu", "Professor", ci)
             )
         );
     }
@@ -223,8 +227,10 @@ public class DemoDataService {
                 studentGroup("FAF-222", 2, 29, faf),
                 studentGroup("FAF-211", 3, 28, faf),
                 studentGroup("FAF-212", 3, 27, faf),
+                studentGroup("FAF-201", 4, 26, faf),
                 studentGroup("SI-231", 1, 30, ci),
-                studentGroup("SI-221", 2, 26, ci)
+                studentGroup("SI-221", 2, 26, ci),
+                studentGroup("SI-211", 3, 25, ci)
             )
         );
     }
@@ -254,23 +260,32 @@ public class DemoDataService {
                 course("CS117", "Compiler Design", 5, faf),
                 course("CS118", "Mobile Development", 4, faf),
                 course("CS119", "DevOps and CI CD", 4, faf),
-                course("CS120", "Parallel Computing", 5, ci)
+                course("CS120", "Parallel Computing", 5, ci),
+                course("CS121", "Distributed Systems", 5, faf),
+                course("CS122", "Microservices Engineering", 4, faf),
+                course("CS123", "Data Mining", 4, ci),
+                course("CS124", "Machine Learning Engineering", 5, ci),
+                course("CS125", "Information Systems Security", 4, faf),
+                course("CS126", "Advanced Java Programming", 4, faf),
+                course("CS127", "Computer Graphics", 4, ci),
+                course("CS128", "Enterprise Application Integration", 4, faf),
+                course("CS129", "Data Warehousing", 4, ci),
+                course("CS130", "Project Management for Software Teams", 3, faf)
             )
         );
     }
 
     private void createCourseEvents(List<Course> courses, List<Professor> professors, List<StudentGroup> groups) {
         List<CourseEvent> events = new ArrayList<>();
-        String[] labRequirements = { "computers", "linux", "network-lab", "electronics-kit" };
 
         for (int groupIndex = 0; groupIndex < groups.size(); groupIndex++) {
             StudentGroup group = groups.get(groupIndex);
-            for (int eventIndex = 0; eventIndex < 5; eventIndex++) {
-                int courseIndex = (groupIndex * 3 + eventIndex) % courses.size();
+            for (int eventIndex = 0; eventIndex < EVENTS_PER_STUDENT_GROUP; eventIndex++) {
+                int courseIndex = (groupIndex * EVENTS_PER_STUDENT_GROUP + eventIndex) % courses.size();
                 Course course = courses.get(courseIndex);
-                Professor professor = professors.get((courseIndex + eventIndex) % professors.size());
+                Professor professor = professors.get((groupIndex * EVENTS_PER_STUDENT_GROUP + eventIndex) % professors.size());
                 CourseEventType type = eventTypeFor(eventIndex);
-                String requiredEquipment = requiredEquipmentFor(type, labRequirements[(groupIndex + eventIndex) % labRequirements.length]);
+                String requiredEquipment = requiredEquipmentFor(type, labRequirementFor(group, groupIndex, eventIndex));
                 events.add(
                     new CourseEvent()
                         .course(course)
@@ -304,7 +319,9 @@ public class DemoDataService {
 
             preferences.add(preference(professor, timeslotAt(timeslots, preferredDay, "09:45"), ProfessorPreferenceType.PREFERRED));
             preferences.add(preference(professor, timeslotAt(timeslots, avoidDay, "08:00"), ProfessorPreferenceType.AVOID));
-            preferences.add(preference(professor, timeslotAt(timeslots, AcademicDayOfWeek.FRIDAY, "17:00"), ProfessorPreferenceType.UNAVAILABLE));
+            preferences.add(
+                preference(professor, timeslotAt(timeslots, AcademicDayOfWeek.FRIDAY, "17:00"), ProfessorPreferenceType.UNAVAILABLE)
+            );
         }
 
         professorPreferenceRepository.saveAll(preferences);
@@ -346,13 +363,20 @@ public class DemoDataService {
     }
 
     private CourseEventType eventTypeFor(int eventIndex) {
-        if (eventIndex == 1 || eventIndex == 4) {
-            return CourseEventType.LABORATORY;
-        }
-        if (eventIndex == 3) {
-            return CourseEventType.SEMINAR;
-        }
-        return CourseEventType.LECTURE;
+        return switch (eventIndex % EVENTS_PER_STUDENT_GROUP) {
+            case 2, 7 -> CourseEventType.LABORATORY;
+            case 1, 4, 6 -> CourseEventType.SEMINAR;
+            default -> CourseEventType.LECTURE;
+        };
+    }
+
+    private String labRequirementFor(StudentGroup group, int groupIndex, int eventIndex) {
+        String[] standardRequirements = { "computers", "linux", "network-lab", "electronics-kit" };
+        String[] largeGroupRequirements = { "computers", "linux", "network-lab" };
+        Integer groupSize = group.getGroupSize();
+        String[] requirements = groupSize != null && groupSize > 32 ? largeGroupRequirements : standardRequirements;
+
+        return requirements[Math.floorMod(groupIndex + eventIndex, requirements.length)];
     }
 
     private String requiredEquipmentFor(CourseEventType type, String labRequirement) {

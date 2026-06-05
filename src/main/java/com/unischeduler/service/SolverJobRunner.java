@@ -98,7 +98,7 @@ public class SolverJobRunner {
 
         try {
             progressService.updateStatus(jobId, SolverJobStatus.VALIDATING_INPUT, 5, "Validating academic input data.");
-            List<CourseEvent> courseEvents = courseEventRepository.findAllWithEagerRelationships();
+            List<CourseEvent> courseEvents = sortedCourseEvents(courseEventRepository.findAllWithEagerRelationships());
             List<Room> rooms = roomRepository.findAllWithEagerRelationships();
             List<Timeslot> timeslots = sortedTimeslots(timeslotRepository.findAll());
             List<ProfessorPreference> professorPreferences = professorPreferenceRepository.findAllWithEagerRelationships();
@@ -132,7 +132,11 @@ public class SolverJobRunner {
 
             progressService.updateStatus(jobId, SolverJobStatus.SCORING_SOFT_CONSTRAINTS, 85, "Persisting scored timetable solution.");
             TimetableVersion version = persistTimetable(jobId, result, cspBuild);
-            progressService.complete(jobId, result.getStatistics(), "Timetable generated successfully as version " + version.getVersionNumber() + ".");
+            progressService.complete(
+                jobId,
+                result.getStatistics(),
+                "Timetable generated successfully as version " + version.getVersionNumber() + "."
+            );
         } catch (CancellationException exception) {
             progressService.cancel(jobId);
         } catch (Exception exception) {
@@ -185,9 +189,10 @@ public class SolverJobRunner {
         Map<Long, Room> roomsById = rooms.stream().collect(Collectors.toMap(Room::getId, Function.identity()));
         Map<Long, Timeslot> timeslotsById = timeslots.stream().collect(Collectors.toMap(Timeslot::getId, Function.identity()));
 
-        for (CourseEvent courseEvent : courseEvents) {
+        for (int eventIndex = 0; eventIndex < courseEvents.size(); eventIndex++) {
+            CourseEvent courseEvent = courseEvents.get(eventIndex);
             CSPVariable variable = variableFor(courseEvent);
-            Long preferredTimeslotId = preferredTimeslot(courseEvent, timeslots, colorByCourseEventId);
+            Long preferredTimeslotId = preferredTimeslot(courseEvent, timeslots, colorByCourseEventId, eventIndex);
             List<CSPValue> domainValues = domainValues(courseEvent, rooms, timeslots, unavailableTimeslots, preferredTimeslotId);
             if (domainValues.isEmpty()) {
                 throw new IllegalStateException("Empty CSP domain for course event " + courseEvent.getId());
@@ -197,13 +202,7 @@ public class SolverJobRunner {
 
         addPairwiseHardConstraints(model, courseEvents);
 
-        return new TimetableCspBuild(
-            model,
-            courseEventsById,
-            roomsById,
-            timeslotsById,
-            professorTimePreferences(professorPreferences)
-        );
+        return new TimetableCspBuild(model, courseEventsById, roomsById, timeslotsById, professorTimePreferences(professorPreferences));
     }
 
     private void addPairwiseHardConstraints(CSPModel model, List<CourseEvent> courseEvents) {
@@ -290,7 +289,11 @@ public class SolverJobRunner {
     }
 
     private boolean roomCanHost(CourseEvent event, Room room) {
-        return room.getCapacity() >= event.getExpectedStudents() && roomTypeMatches(event.getEventType(), room.getRoomType()) && hasEquipment(event, room);
+        return (
+            room.getCapacity() >= event.getExpectedStudents() &&
+            roomTypeMatches(event.getEventType(), room.getRoomType()) &&
+            hasEquipment(event, room)
+        );
     }
 
     private boolean roomTypeMatches(CourseEventType eventType, RoomType roomType) {
@@ -350,19 +353,34 @@ public class SolverJobRunner {
         return colors;
     }
 
-    private Long preferredTimeslot(CourseEvent event, List<Timeslot> timeslots, Map<Long, Integer> colorByCourseEventId) {
+    private Long preferredTimeslot(CourseEvent event, List<Timeslot> timeslots, Map<Long, Integer> colorByCourseEventId, int eventIndex) {
         Integer color = colorByCourseEventId.get(event.getId());
-        if (color == null || timeslots.isEmpty()) {
+        if (timeslots.isEmpty()) {
             return null;
         }
-        return timeslots.get(color % timeslots.size()).getId();
+        int colorOffset = color == null ? 0 : color;
+        int slotIndex = Math.floorMod(eventIndex * 11 + colorOffset * 3, timeslots.size());
+        return timeslots.get(slotIndex).getId();
     }
 
     private List<Timeslot> sortedTimeslots(List<Timeslot> timeslots) {
-        return timeslots
+        return timeslots.stream().sorted(Comparator.comparing(Timeslot::getDayOfWeek).thenComparing(Timeslot::getStartTime)).toList();
+    }
+
+    private List<CourseEvent> sortedCourseEvents(List<CourseEvent> courseEvents) {
+        return courseEvents
             .stream()
-            .sorted(Comparator.comparing(Timeslot::getDayOfWeek).thenComparing(Timeslot::getStartTime))
+            .sorted(
+                Comparator.comparing((CourseEvent event) -> studentGroupName(event), Comparator.nullsLast(String::compareTo)).thenComparing(
+                    CourseEvent::getId,
+                    Comparator.nullsLast(Long::compareTo)
+                )
+            )
             .toList();
+    }
+
+    private String studentGroupName(CourseEvent event) {
+        return event.getStudentGroup() == null ? null : event.getStudentGroup().getName();
     }
 
     private void validateInputs(List<CourseEvent> courseEvents, List<Room> rooms, List<Timeslot> timeslots) {
