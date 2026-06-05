@@ -17,16 +17,22 @@ public class CSPModel {
     private final List<CSPVariable> variables = new ArrayList<>();
     private final Map<CSPVariable, Domain> domains = new LinkedHashMap<>();
     private final List<CSPConstraint> constraints = new ArrayList<>();
+    private final Map<CSPVariable, Set<CSPVariable>> neighborsByVariable = new LinkedHashMap<>();
+    private final Map<CSPVariable, Map<CSPVariable, List<CSPConstraint>>> constraintsByVariable = new LinkedHashMap<>();
 
     public void addVariable(CSPVariable variable, Collection<CSPValue> values) {
         if (!domains.containsKey(variable)) {
             variables.add(variable);
+            neighborsByVariable.computeIfAbsent(variable, ignored -> new LinkedHashSet<>());
+            constraintsByVariable.computeIfAbsent(variable, ignored -> new LinkedHashMap<>());
         }
         domains.put(variable, new Domain(variable, values));
     }
 
     public void addConstraint(CSPConstraint constraint) {
         constraints.add(constraint);
+        indexConstraint(constraint.getFirstVariable(), constraint.getSecondVariable(), constraint);
+        indexConstraint(constraint.getSecondVariable(), constraint.getFirstVariable(), constraint);
     }
 
     public List<CSPVariable> getVariables() {
@@ -50,17 +56,15 @@ public class CSPModel {
     }
 
     public List<CSPConstraint> constraintsBetween(CSPVariable left, CSPVariable right) {
-        return constraints.stream().filter(constraint -> constraint.connects(left, right)).toList();
+        Map<CSPVariable, List<CSPConstraint>> byNeighbor = constraintsByVariable.get(left);
+        if (byNeighbor == null) {
+            return List.of();
+        }
+        return Collections.unmodifiableList(byNeighbor.getOrDefault(right, List.of()));
     }
 
     public Set<CSPVariable> neighborsOf(CSPVariable variable) {
-        Set<CSPVariable> neighbors = new LinkedHashSet<>();
-        for (CSPConstraint constraint : constraints) {
-            if (constraint.involves(variable)) {
-                neighbors.add(constraint.other(variable));
-            }
-        }
-        return Collections.unmodifiableSet(neighbors);
+        return Collections.unmodifiableSet(neighborsByVariable.getOrDefault(variable, Set.of()));
     }
 
     public boolean isConsistentWith(CSPVariable variable, CSPValue value, Assignment assignment) {
@@ -81,5 +85,13 @@ public class CSPModel {
         }
         constraints.forEach(copy::addConstraint);
         return copy;
+    }
+
+    private void indexConstraint(CSPVariable variable, CSPVariable neighbor, CSPConstraint constraint) {
+        neighborsByVariable.computeIfAbsent(variable, ignored -> new LinkedHashSet<>()).add(neighbor);
+        constraintsByVariable
+            .computeIfAbsent(variable, ignored -> new LinkedHashMap<>())
+            .computeIfAbsent(neighbor, ignored -> new ArrayList<>())
+            .add(constraint);
     }
 }

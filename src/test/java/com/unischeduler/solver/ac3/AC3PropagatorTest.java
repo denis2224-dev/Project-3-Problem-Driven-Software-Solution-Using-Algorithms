@@ -67,6 +67,28 @@ class AC3PropagatorTest {
         assertThat(model.getDomain(second).getValues()).containsExactly(value2);
     }
 
+    @Test
+    void propagationFromAssignedVariableCascadesToAffectedNeighbors() {
+        CSPVariable first = variable("X1");
+        CSPVariable second = variable("X2");
+        CSPVariable third = variable("X3");
+        CSPValue value1 = value("room-a-slot-1");
+        CSPValue value2 = value("room-b-slot-1");
+        CSPValue value3 = value("room-c-slot-1");
+        CSPModel model = new CSPModel();
+        model.addVariable(first, List.of(value1));
+        model.addVariable(second, List.of(value1, value2));
+        model.addVariable(third, List.of(value2, value3));
+        model.addConstraint(notEqual(first, second));
+        model.addConstraint(notEqual(second, third));
+
+        AC3Result result = propagator.propagateFrom(model, first);
+
+        assertThat(result.isArcConsistent()).isTrue();
+        assertThat(model.getDomain(second).getValues()).containsExactly(value2);
+        assertThat(model.getDomain(third).getValues()).containsExactly(value3);
+    }
+
     private CSPConstraint notEqual(CSPVariable first, CSPVariable second) {
         return new CSPConstraint(first, second, "values must differ", (left, right) -> !left.equals(right));
     }

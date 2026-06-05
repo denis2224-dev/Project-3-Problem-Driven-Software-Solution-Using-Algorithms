@@ -151,8 +151,8 @@ public class DemoDataService {
                 room("Seminar Room 309", "A-309", 40, RoomType.SEMINAR, "whiteboard, display", main),
                 room("Programming Lab 1", "L-101", 34, RoomType.LABORATORY, "computers, linux, projector, whiteboard", labs),
                 room("Programming Lab 2", "L-102", 32, RoomType.LABORATORY, "computers, linux, projector, whiteboard", labs),
-                room("Networks Lab", "L-205", 30, RoomType.LABORATORY, "computers, network-lab, routers, whiteboard", labs),
-                room("Electronics Lab", "L-310", 28, RoomType.LABORATORY, "computers, electronics-kit, oscilloscope, whiteboard", labs),
+                room("Networks Lab", "L-205", 36, RoomType.LABORATORY, "computers, network-lab, routers, whiteboard", labs),
+                room("Electronics Lab", "L-310", 32, RoomType.LABORATORY, "computers, electronics-kit, oscilloscope, whiteboard", labs),
                 room("Exam Hall Alpha", "E-100", 180, RoomType.EXAM, "projector, clock, whiteboard", exams),
                 room("Exam Hall Beta", "E-200", 140, RoomType.EXAM, "projector, clock, whiteboard", exams)
             )

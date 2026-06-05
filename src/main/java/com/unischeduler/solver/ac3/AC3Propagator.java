@@ -17,13 +17,29 @@ public class AC3Propagator {
 
     public AC3Result propagate(CSPModel model) {
         Deque<Arc> queue = new ArrayDeque<>();
-        List<ReviseResult> revisions = new ArrayList<>();
 
         // AC-3 starts by enqueueing both directions of every binary constraint arc.
         for (CSPConstraint constraint : model.getConstraints()) {
             queue.add(new Arc(constraint.getFirstVariable(), constraint.getSecondVariable()));
             queue.add(new Arc(constraint.getSecondVariable(), constraint.getFirstVariable()));
         }
+
+        return propagate(model, queue);
+    }
+
+    public AC3Result propagateFrom(CSPModel model, CSPVariable assignedVariable) {
+        Deque<Arc> queue = new ArrayDeque<>();
+
+        // MAC only needs to revisit arcs whose support can be affected by the newly singleton domain.
+        for (CSPVariable neighbor : model.neighborsOf(assignedVariable)) {
+            queue.add(new Arc(neighbor, assignedVariable));
+        }
+
+        return propagate(model, queue);
+    }
+
+    private AC3Result propagate(CSPModel model, Deque<Arc> queue) {
+        List<ReviseResult> revisions = new ArrayList<>();
 
         while (!queue.isEmpty()) {
             Arc arc = queue.removeFirst();

@@ -97,8 +97,8 @@ public class BacktrackingMacSolver {
             CSPModel branchModel = model.copy();
             branchModel.restrictDomain(variable, List.of(value));
 
-            // MAC step: after every tentative assignment, enforce AC-3 on the remaining domains.
-            AC3Result propagationResult = ac3Propagator.propagate(branchModel);
+            // MAC step: after every tentative assignment, enforce AC-3 only on arcs affected by that assignment.
+            AC3Result propagationResult = ac3Propagator.propagateFrom(branchModel, variable);
             statistics.addAc3RevisionCount(propagationResult.getRevisions().size());
             statistics.addDomainReductionCount(propagationResult.getDomainReductionCount());
             if (!propagationResult.isArcConsistent()) {
