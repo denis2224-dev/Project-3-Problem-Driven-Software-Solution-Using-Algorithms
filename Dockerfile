@@ -4,7 +4,7 @@ FROM maven:3.9.11-eclipse-temurin-21 AS build
 WORKDIR /workspace
 
 COPY .mvn .mvn
-COPY mvnw pom.xml ./
+COPY mvnw pom.xml sonar-project.properties checkstyle.xml ./
 COPY src ./src
 
 # The Angular UI is built in Dockerfile.frontend. This backend image packages only

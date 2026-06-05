@@ -126,6 +126,8 @@ Stop the stack and remove the PostgreSQL volume:
 docker compose down -v
 ```
 
+If PostgreSQL exits after a previous failed Docker startup, run `docker compose down -v` once, then retry `docker compose up --build`.
+
 Docker environment variables can be overridden through a local `.env` file. Start from the committed template:
 
 ```bash
