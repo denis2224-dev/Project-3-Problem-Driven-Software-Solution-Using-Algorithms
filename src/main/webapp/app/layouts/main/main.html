@@ -1,13 +1,69 @@
 <jhi-page-ribbon />
 
-<div>
+<div class="app-shell">
   <router-outlet name="navbar" />
-</div>
 
-<div class="container-fluid">
-  <div class="card jh-card">
-    <router-outlet />
+  <div class="enterprise-shell">
+    <aside class="app-sidebar" aria-label="Primary navigation">
+      <a class="sidebar-brand" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <span class="sidebar-logo">US</span>
+        <span>
+          <strong>UniScheduler</strong>
+          <small>Timetabling platform</small>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav">
+        <span class="sidebar-section">Workspace</span>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <fa-icon icon="home" />
+          <span>Dashboard</span>
+        </a>
+        <a routerLink="/demo-scenario" routerLinkActive="active">
+          <fa-icon icon="tachometer-alt" />
+          <span>Generate timetable</span>
+        </a>
+        <a routerLink="/timetable-view" routerLinkActive="active">
+          <fa-icon icon="calendar-alt" />
+          <span>Weekly timetable</span>
+        </a>
+        <a routerLink="/exam-schedule" routerLinkActive="active">
+          <fa-icon icon="road" />
+          <span>Exam schedule</span>
+        </a>
+        <a routerLink="/algorithms" routerLinkActive="active">
+          <fa-icon icon="book" />
+          <span>Algorithms</span>
+        </a>
+
+        <span class="sidebar-section">Academic data</span>
+        <a routerLink="/course" routerLinkActive="active">
+          <fa-icon icon="database" />
+          <span>Courses</span>
+        </a>
+        <a routerLink="/professor" routerLinkActive="active">
+          <fa-icon icon="users" />
+          <span>Professors</span>
+        </a>
+        <a routerLink="/room" routerLinkActive="active">
+          <fa-icon icon="th-list" />
+          <span>Rooms</span>
+        </a>
+        <a routerLink="/course-event" routerLinkActive="active">
+          <fa-icon icon="list" />
+          <span>Course events</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="app-main">
+      <div class="container-fluid content-container">
+        <div class="card jh-card">
+          <router-outlet />
+        </div>
+      </div>
+
+      <jhi-footer />
+    </main>
   </div>
-
-  <jhi-footer />
 </div>

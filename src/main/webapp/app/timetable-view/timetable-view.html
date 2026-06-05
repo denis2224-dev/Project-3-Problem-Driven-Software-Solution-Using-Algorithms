@@ -79,7 +79,11 @@
           </div>
           @for (day of days; track day) {
             <div class="schedule-cell">
-              @for (entry of entriesFor(day, row); track entry.timetableEntryId) {
+              @let cellEntries = entriesFor(day, row);
+              @if (cellEntries.length === 0) {
+                <span class="cell-empty">Available</span>
+              }
+              @for (entry of cellEntries; track entry.timetableEntryId) {
                 <article class="event-card" [ngClass]="eventTypeClass(entry.eventType)">
                   <div class="event-topline">
                     <strong>{{ entry.courseCode }}</strong>

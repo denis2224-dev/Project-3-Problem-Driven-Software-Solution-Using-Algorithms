@@ -38,7 +38,10 @@
     <div class="metric-grid">
       @for (metric of metrics(); track metric.label) {
         <a class="metric-card" [ngClass]="metric.accent" [routerLink]="metric.route">
-          <span class="metric-label">{{ metric.label }}</span>
+          <span class="metric-topline">
+            <span class="metric-label">{{ metric.label }}</span>
+            <span class="metric-icon"><fa-icon [icon]="metric.icon" /></span>
+          </span>
           <strong>{{ metric.value }}</strong>
           <span class="metric-detail">{{ metric.detail }}</span>
         </a>

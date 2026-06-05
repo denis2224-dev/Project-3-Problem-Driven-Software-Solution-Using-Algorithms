@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, OnInit, Renderer2, RendererFactory2, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import dayjs from 'dayjs/esm';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import { AccountService } from 'app/core/auth/account.service';
@@ -14,7 +16,7 @@ import PageRibbon from '../profiles/page-ribbon';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './main.html',
   providers: [AppPageTitleStrategy],
-  imports: [RouterOutlet, Footer, PageRibbon],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, FontAwesomeModule, Footer, PageRibbon],
 })
 export default class Main implements OnInit {
   private readonly renderer: Renderer2;
