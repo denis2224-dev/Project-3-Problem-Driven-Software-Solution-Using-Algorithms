@@ -15,3 +15,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.public-login-link {
+  border-color: rgba(168, 85, 247, 0.35) !important;
+  color: #fff !important;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.9), rgba(124, 58, 237, 0.9)) !important;
+}

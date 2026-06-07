@@ -8,8 +8,14 @@ import { errorRoute } from './layouts/error/error.route';
 const routes: Routes = [
   {
     path: '',
+    loadComponent: () => import('./landing/landing'),
+    title: 'UniScheduler',
+  },
+  {
+    path: 'dashboard',
     loadComponent: () => import('./home/home'),
-    title: 'home.title',
+    title: 'Dashboard',
+    canActivate: [UserRouteAccessService],
   },
   {
     path: '',
@@ -37,6 +43,7 @@ const routes: Routes = [
     path: 'algorithms',
     loadComponent: () => import('./algorithm-explanation/algorithm-explanation'),
     title: 'Algorithm Explanation',
+    canActivate: [UserRouteAccessService],
   },
   {
     path: 'demo-scenario',
@@ -58,6 +65,7 @@ const routes: Routes = [
   },
   {
     path: '',
+    canActivate: [UserRouteAccessService],
     loadChildren: () => import('./entities/entity.routes'),
   },
   ...errorRoute,

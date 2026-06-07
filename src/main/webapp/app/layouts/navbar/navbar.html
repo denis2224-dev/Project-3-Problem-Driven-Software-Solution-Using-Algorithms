@@ -1,6 +1,7 @@
 <nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
+    @let accountRef = account();
+    <a class="navbar-brand logo" [routerLink]="accountRef !== null ? '/dashboard' : '/'" (click)="collapseNavbar()">
       <span class="logo-img"></span>
       <span class="navbar-title">UniScheduler</span>
       @if (version) {
@@ -21,22 +22,31 @@
 
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed()">
       <ul class="navbar-nav ms-auto">
-        @if (account() !== null) {
+        @if (accountRef !== null) {
           <li class="nav-item">
             <a class="nav-link" routerLink="/demo-scenario" routerLinkActive="active" (click)="collapseNavbar()">Generate</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/timetable-view" routerLinkActive="active" (click)="collapseNavbar()">Timetable</a>
           </li>
+        } @else {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/" fragment="solution" (click)="collapseNavbar()">Solution</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard" (click)="collapseNavbar()">Explore Platform</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link public-login-link" routerLink="/login" (click)="collapseNavbar()">Login</a>
+          </li>
         }
 
-        <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" data-cy="accountMenu">
-          @let accountRef = account();
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
-            {{ accountRef?.login ?? 'Account' }}
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu aria-labelledby="account-menu">
-            @if (accountRef !== null) {
+        @if (accountRef !== null) {
+          <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" data-cy="accountMenu">
+            <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
+              {{ accountRef.login }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu aria-labelledby="account-menu">
               <li>
                 <a
                   class="dropdown-item"
@@ -60,11 +70,9 @@
                 </a>
               </li>
               <li><a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">Sign out</a></li>
-            } @else {
-              <li><a class="dropdown-item" (click)="login()" id="login" data-cy="login">Sign in</a></li>
-            }
-          </ul>
-        </li>
+            </ul>
+          </li>
+        }
       </ul>
     </div>
   </div>

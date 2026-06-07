@@ -17,6 +17,8 @@ import PageRibbon from '../profiles/page-ribbon';
   imports: [RouterOutlet, RouterLink, RouterLinkActive, Footer, PageRibbon],
 })
 export default class Main implements OnInit {
+  readonly account = inject(AccountService).account;
+
   private readonly renderer: Renderer2;
   private readonly htmlElement: HTMLElement;
 

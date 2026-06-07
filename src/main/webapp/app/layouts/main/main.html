@@ -3,43 +3,51 @@
 <div class="app-shell">
   <router-outlet name="navbar" />
 
-  <div class="enterprise-shell">
-    <aside class="app-sidebar" aria-label="Primary navigation">
-      <a class="sidebar-brand" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <span class="sidebar-logo">US</span>
-        <span>
-          <strong>UniScheduler</strong>
-          <small>Timetabling</small>
-        </span>
-      </a>
+  @if (account() !== null) {
+    <div class="enterprise-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <a class="sidebar-brand" routerLink="/dashboard" routerLinkActive="active">
+          <span class="sidebar-logo">US</span>
+          <span>
+            <strong>UniScheduler</strong>
+            <small>Timetabling</small>
+          </span>
+        </a>
 
-      <nav class="sidebar-nav">
-        <span class="sidebar-section">Workspace</span>
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><span>Dashboard</span></a>
-        <a routerLink="/demo-scenario" routerLinkActive="active"><span>Generate</span></a>
-        <a routerLink="/timetable-view" routerLinkActive="active"><span>Timetable</span></a>
-        <a routerLink="/exam-schedule" routerLinkActive="active"><span>Exams</span></a>
-        <a routerLink="/algorithms" routerLinkActive="active"><span>Algorithms</span></a>
+        <nav class="sidebar-nav">
+          <span class="sidebar-section">Workspace</span>
+          <a routerLink="/dashboard" routerLinkActive="active"><span>Dashboard</span></a>
+          <a routerLink="/demo-scenario" routerLinkActive="active"><span>Generate</span></a>
+          <a routerLink="/timetable-view" routerLinkActive="active"><span>Timetable</span></a>
+          <a routerLink="/exam-schedule" routerLinkActive="active"><span>Exams</span></a>
+          <a routerLink="/algorithms" routerLinkActive="active"><span>Algorithms</span></a>
 
-        <span class="sidebar-section">Academic data</span>
-        <a routerLink="/course-event" routerLinkActive="active"><span>Course events</span></a>
-        <a routerLink="/course" routerLinkActive="active"><span>Courses</span></a>
-        <a routerLink="/professor" routerLinkActive="active"><span>Professors</span></a>
-        <a routerLink="/room" routerLinkActive="active"><span>Rooms</span></a>
-        <a routerLink="/student-group" routerLinkActive="active"><span>Groups</span></a>
-        <a routerLink="/timeslot" routerLinkActive="active"><span>Timeslots</span></a>
-        <a routerLink="/professor-preference" routerLinkActive="active"><span>Preferences</span></a>
-      </nav>
-    </aside>
+          <span class="sidebar-section">Academic data</span>
+          <a routerLink="/course-event" routerLinkActive="active"><span>Course events</span></a>
+          <a routerLink="/course" routerLinkActive="active"><span>Courses</span></a>
+          <a routerLink="/professor" routerLinkActive="active"><span>Professors</span></a>
+          <a routerLink="/room" routerLinkActive="active"><span>Rooms</span></a>
+          <a routerLink="/student-group" routerLinkActive="active"><span>Groups</span></a>
+          <a routerLink="/timeslot" routerLinkActive="active"><span>Timeslots</span></a>
+          <a routerLink="/professor-preference" routerLinkActive="active"><span>Preferences</span></a>
+        </nav>
+      </aside>
 
-    <main class="app-main">
-      <div class="container-fluid content-container">
-        <div class="card jh-card">
-          <router-outlet />
+      <main class="app-main">
+        <div class="container-fluid content-container">
+          <div class="card jh-card">
+            <router-outlet />
+          </div>
         </div>
-      </div>
 
-      <jhi-footer />
+        <jhi-footer />
+      </main>
+    </div>
+  } @else {
+    <main class="public-main">
+      <div class="public-content">
+        <router-outlet />
+      </div>
     </main>
-  </div>
+  }
 </div>

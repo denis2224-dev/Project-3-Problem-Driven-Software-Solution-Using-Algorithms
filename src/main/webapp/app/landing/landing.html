@@ -1,0 +1,132 @@
+<section class="landing-page">
+  <section class="landing-hero" aria-labelledby="landing-title">
+    <div class="landing-copy">
+      <p class="landing-eyebrow">University scheduling platform</p>
+      <h1 id="landing-title">UniScheduler</h1>
+      <p class="landing-subtitle">Automated University Timetabling and Exam Scheduling</p>
+      <p class="landing-lead">Generate conflict-free academic schedules using constraint satisfaction and graph-based algorithms.</p>
+      <div class="landing-actions">
+        <a class="landing-button primary" routerLink="/login">Login to Platform</a>
+        <a class="landing-button secondary" routerLink="/dashboard">Explore Solution</a>
+      </div>
+    </div>
+
+    <div class="solver-visual" aria-hidden="true">
+      <div class="visual-panel visual-calendar">
+        <div class="visual-header">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="calendar-grid">
+          @for (cell of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track cell) {
+            <span [class.active]="cell === 2 || cell === 5 || cell === 8 || cell === 11"></span>
+          }
+        </div>
+      </div>
+
+      <div class="graph-layer">
+        <span class="node node-a"></span>
+        <span class="node node-b"></span>
+        <span class="node node-c"></span>
+        <span class="node node-d"></span>
+        <span class="edge edge-a"></span>
+        <span class="edge edge-b"></span>
+        <span class="edge edge-c"></span>
+      </div>
+
+      <div class="visual-panel visual-score">
+        <span>Hard conflicts</span>
+        <strong>0</strong>
+        <small>Validated by solver constraints</small>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem" class="landing-section compact-section">
+    <div class="section-copy">
+      <p class="landing-eyebrow">Problem</p>
+      <h2>Manual university scheduling is slow and fragile.</h2>
+      <p>Every timetable must balance people, rooms, groups, equipment, and time. Small manual changes can create hidden conflicts.</p>
+    </div>
+    <div class="compact-grid problem-grid">
+      @for (problem of problems; track problem.title) {
+        <article class="landing-card">
+          <h3>{{ problem.title }}</h3>
+          <p>{{ problem.text }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section id="solution" class="landing-section split-section">
+    <div class="section-copy">
+      <p class="landing-eyebrow">Solution</p>
+      <h2>Algorithms turn academic constraints into valid schedules.</h2>
+      <p>
+        UniScheduler builds a conflict graph, creates a Welsh-Powell warm start, prunes domains with AC-3, and searches assignments with
+        MRV, LCV, and MAC backtracking.
+      </p>
+    </div>
+    <div class="algorithm-strip" aria-label="Algorithm pipeline">
+      <span>Welsh-Powell</span>
+      <span>AC-3</span>
+      <span>MRV</span>
+      <span>LCV</span>
+      <span>MAC</span>
+    </div>
+  </section>
+
+  <section class="landing-section compact-section">
+    <div class="section-copy">
+      <p class="landing-eyebrow">Value model</p>
+      <h2>Built for universities that need transparent scheduling.</h2>
+    </div>
+    <div class="compact-grid value-grid">
+      @for (value of values; track value.title) {
+        <article class="landing-card">
+          <h3>{{ value.title }}</h3>
+          <p>{{ value.text }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="landing-section">
+    <div class="section-copy">
+      <p class="landing-eyebrow">Platform features</p>
+      <h2>A focused toolkit for academic scheduling demos.</h2>
+    </div>
+    <div class="feature-grid">
+      @for (feature of features; track feature.title) {
+        <article class="landing-card feature-card">
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.text }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="landing-section workflow-section">
+    <div class="section-copy">
+      <p class="landing-eyebrow">Workflow</p>
+      <h2>From university data to a generated timetable.</h2>
+    </div>
+    <div class="workflow-track">
+      @for (step of workflow; track step; let last = $last) {
+        <div class="workflow-step">
+          <span>{{ step }}</span>
+        </div>
+        @if (!last) {
+          <span class="workflow-arrow">-></span>
+        }
+      }
+    </div>
+  </section>
+
+  <section class="landing-cta">
+    <p class="landing-eyebrow">Continue</p>
+    <h2>Ready to generate optimized schedules?</h2>
+    <a class="landing-button primary" routerLink="/login">Login to Continue</a>
+  </section>
+</section>
