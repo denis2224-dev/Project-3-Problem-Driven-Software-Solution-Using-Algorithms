@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Timetable;
 import com.unischeduler.domain.enumeration.TimetableStatus;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.TimetableRepository;
 import com.unischeduler.service.dto.TimetableDTO;
 import com.unischeduler.service.mapper.TimetableMapper;
@@ -34,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class TimetableResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";

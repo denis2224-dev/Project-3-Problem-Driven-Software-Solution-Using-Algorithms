@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Department;
 import com.unischeduler.domain.Professor;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.ProfessorRepository;
 import com.unischeduler.service.ProfessorService;
 import com.unischeduler.service.dto.ProfessorDTO;
@@ -41,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class ProfessorResourceIT {
 
     private static final String DEFAULT_FIRST_NAME = "AAAAAAAAAA";

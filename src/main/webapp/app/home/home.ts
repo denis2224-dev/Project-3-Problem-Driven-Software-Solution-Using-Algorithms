@@ -1,12 +1,13 @@
 import { NgClass } from '@angular/common';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 interface DashboardMetric {
   label: string;
@@ -36,6 +37,7 @@ interface DashboardSolverJob {
 })
 export default class Home {
   public readonly account = inject(AccountService).account;
+  readonly isAdmin = computed(() => this.account()?.authorities.includes(Authority.ADMIN) ?? false);
 
   readonly metrics = signal<DashboardMetric[]>([
     { label: 'Course events', value: 0, detail: 'Lectures, laboratories, seminars', route: '/course-event' },

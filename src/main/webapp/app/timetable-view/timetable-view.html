@@ -8,6 +8,10 @@
     <div class="weekly-actions">
       @if (selectedVersion(); as version) {
         <button class="neon-button ghost" type="button" (click)="downloadCsv(version.id)">Export CSV</button>
+        @if (isAdmin()) {
+          <button class="neon-button ghost" type="button" (click)="approveTimetable(version.timetable?.id)">Approve</button>
+          <button class="neon-button primary" type="button" (click)="publishTimetable(version.timetable?.id)">Publish</button>
+        }
       }
       <button class="neon-button flat" type="button" (click)="loadVersions()" [disabled]="loading()">
         {{ loading() ? 'Loading...' : 'Refresh' }}
@@ -38,8 +42,12 @@
   @if (versions().length === 0 && !loading()) {
     <article class="weekly-empty">
       <h2>No timetable version exists yet</h2>
-      <p>Load demo data and generate a timetable first.</p>
-      <a class="neon-button primary" routerLink="/demo-scenario">Generate timetable</a>
+      @if (isAdmin()) {
+        <p>Load demo data and generate a timetable first.</p>
+        <a class="neon-button primary" routerLink="/demo-scenario">Generate timetable</a>
+      } @else {
+        <p>No published timetable is available yet. Ask an administrator to generate and publish a timetable.</p>
+      }
     </article>
   } @else {
     <div class="weekly-summary lean-summary">

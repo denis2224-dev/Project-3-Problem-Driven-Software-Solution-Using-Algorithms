@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Department;
 import com.unischeduler.domain.StudentGroup;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.StudentGroupRepository;
 import com.unischeduler.service.StudentGroupService;
 import com.unischeduler.service.dto.StudentGroupDTO;
@@ -41,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class StudentGroupResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";

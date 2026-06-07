@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Building;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.BuildingRepository;
 import com.unischeduler.service.dto.BuildingDTO;
 import com.unischeduler.service.mapper.BuildingMapper;
@@ -31,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class BuildingResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";

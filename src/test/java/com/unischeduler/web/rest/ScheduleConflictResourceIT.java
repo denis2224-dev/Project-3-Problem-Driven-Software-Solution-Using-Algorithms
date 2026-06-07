@@ -14,6 +14,7 @@ import com.unischeduler.domain.ScheduleConflict;
 import com.unischeduler.domain.TimetableVersion;
 import com.unischeduler.domain.enumeration.ConflictSeverity;
 import com.unischeduler.domain.enumeration.ConflictType;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.ScheduleConflictRepository;
 import com.unischeduler.service.ScheduleConflictService;
 import com.unischeduler.service.dto.ScheduleConflictDTO;
@@ -43,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class ScheduleConflictResourceIT {
 
     private static final ConflictType DEFAULT_CONFLICT_TYPE = ConflictType.PROFESSOR_CLASH;

@@ -4,7 +4,9 @@ import { RouterLink } from '@angular/router';
 
 import { catchError, of } from 'rxjs';
 
+import { AccountService } from 'app/core/auth/account.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 interface ExamColoringEntry {
   examId?: number | null;
@@ -41,6 +43,8 @@ export default class ExamSchedule implements OnInit {
   readonly result = signal<ExamColoringResult | null>(null);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly account = inject(AccountService).account;
+  readonly isAdmin = computed(() => this.account()?.authorities.includes(Authority.ADMIN) ?? false);
 
   readonly periods = computed<ExamPeriodGroup[]>(() => {
     const groups = new Map<number, ExamColoringEntry[]>();

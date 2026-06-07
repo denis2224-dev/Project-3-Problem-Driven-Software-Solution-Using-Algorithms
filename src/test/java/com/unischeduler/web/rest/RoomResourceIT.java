@@ -13,6 +13,7 @@ import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Building;
 import com.unischeduler.domain.Room;
 import com.unischeduler.domain.enumeration.RoomType;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.RoomRepository;
 import com.unischeduler.service.RoomService;
 import com.unischeduler.service.dto.RoomDTO;
@@ -42,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class RoomResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";

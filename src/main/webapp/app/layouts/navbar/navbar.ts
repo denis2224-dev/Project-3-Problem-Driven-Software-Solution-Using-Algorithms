@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -9,6 +9,7 @@ import { environment } from 'environments/environment';
 import { AccountService } from 'app/core/auth/account.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { LoginService } from 'app/login/login.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 @Component({
   selector: 'jhi-navbar',
@@ -23,6 +24,7 @@ export default class Navbar implements OnInit {
   readonly openAPIEnabled = signal(false);
   readonly version: string;
   readonly account = inject(AccountService).account;
+  readonly isAdmin = computed(() => this.account()?.authorities.includes(Authority.ADMIN) ?? false);
 
   private readonly loginService = inject(LoginService);
   private readonly profileService = inject(ProfileService);

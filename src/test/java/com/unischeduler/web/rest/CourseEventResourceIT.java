@@ -15,6 +15,7 @@ import com.unischeduler.domain.CourseEvent;
 import com.unischeduler.domain.Professor;
 import com.unischeduler.domain.StudentGroup;
 import com.unischeduler.domain.enumeration.CourseEventType;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.CourseEventRepository;
 import com.unischeduler.service.CourseEventService;
 import com.unischeduler.service.dto.CourseEventDTO;
@@ -44,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class CourseEventResourceIT {
 
     private static final CourseEventType DEFAULT_EVENT_TYPE = CourseEventType.LECTURE;

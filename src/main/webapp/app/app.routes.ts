@@ -54,6 +54,9 @@ const routes: Routes = [
     path: 'demo-scenario',
     loadComponent: () => import('./demo-scenario/demo-scenario'),
     title: 'FAF Demo Scenario',
+    data: {
+      authorities: [Authority.ADMIN],
+    },
     canActivate: [UserRouteAccessService],
   },
   {
@@ -70,6 +73,9 @@ const routes: Routes = [
   },
   {
     path: '',
+    data: {
+      authorities: [Authority.ADMIN],
+    },
     canActivate: [UserRouteAccessService],
     loadChildren: () => import('./entities/entity.routes'),
   },

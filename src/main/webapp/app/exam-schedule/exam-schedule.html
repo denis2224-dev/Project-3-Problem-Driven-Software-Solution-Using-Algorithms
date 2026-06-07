@@ -7,7 +7,9 @@
       <button class="neon-button primary" type="button" (click)="loadColoring()" [disabled]="loading()">
         {{ loading() ? 'Loading...' : 'Refresh coloring' }}
       </button>
-      <a class="neon-button ghost" routerLink="/demo-scenario">Load demo data</a>
+      @if (isAdmin()) {
+        <a class="neon-button ghost" routerLink="/demo-scenario">Load demo data</a>
+      }
     </div>
   </header>
 
@@ -55,8 +57,12 @@
   } @else if (!loading()) {
     <article class="exam-empty">
       <h2>No exam coloring result yet</h2>
-      <p>Load demo data from the demo scenario page, then refresh the coloring.</p>
-      <a class="neon-button primary" routerLink="/demo-scenario">Open demo scenario</a>
+      @if (isAdmin()) {
+        <p>Load demo data from the demo scenario page, then refresh the coloring.</p>
+        <a class="neon-button primary" routerLink="/demo-scenario">Open demo scenario</a>
+      } @else {
+        <p>No exam schedule is available yet. Ask an administrator to load demo data first.</p>
+      }
     </article>
   }
 </section>

@@ -17,19 +17,29 @@
         <nav class="sidebar-nav">
           <span class="sidebar-section">Workspace</span>
           <a routerLink="/dashboard" routerLinkActive="active"><span>Dashboard</span></a>
-          <a routerLink="/demo-scenario" routerLinkActive="active"><span>Generate</span></a>
+          @if (isAdmin()) {
+            <a routerLink="/demo-scenario" routerLinkActive="active"><span>Generate</span></a>
+          }
           <a routerLink="/timetable-view" routerLinkActive="active"><span>Timetable</span></a>
           <a routerLink="/exam-schedule" routerLinkActive="active"><span>Exams</span></a>
           <a routerLink="/algorithms" routerLinkActive="active"><span>Algorithms</span></a>
 
-          <span class="sidebar-section">Academic data</span>
-          <a routerLink="/course-event" routerLinkActive="active"><span>Course events</span></a>
-          <a routerLink="/course" routerLinkActive="active"><span>Courses</span></a>
-          <a routerLink="/professor" routerLinkActive="active"><span>Professors</span></a>
-          <a routerLink="/room" routerLinkActive="active"><span>Rooms</span></a>
-          <a routerLink="/student-group" routerLinkActive="active"><span>Groups</span></a>
-          <a routerLink="/timeslot" routerLinkActive="active"><span>Timeslots</span></a>
-          <a routerLink="/professor-preference" routerLinkActive="active"><span>Preferences</span></a>
+          @if (isAdmin()) {
+            <span class="sidebar-section">Academic data</span>
+            <a routerLink="/course-event" routerLinkActive="active"><span>Course events</span></a>
+            <a routerLink="/course" routerLinkActive="active"><span>Courses</span></a>
+            <a routerLink="/professor" routerLinkActive="active"><span>Professors</span></a>
+            <a routerLink="/room" routerLinkActive="active"><span>Rooms</span></a>
+            <a routerLink="/student-group" routerLinkActive="active"><span>Groups</span></a>
+            <a routerLink="/timeslot" routerLinkActive="active"><span>Timeslots</span></a>
+            <a routerLink="/professor-preference" routerLinkActive="active"><span>Preferences</span></a>
+
+            <span class="sidebar-section">Administration</span>
+            <a routerLink="/admin/health" routerLinkActive="active"><span>System health</span></a>
+            <a routerLink="/admin/metrics" routerLinkActive="active"><span>Metrics</span></a>
+            <a routerLink="/admin/docs" routerLinkActive="active"><span>API docs</span></a>
+            <a routerLink="/user-management" routerLinkActive="active"><span>User management</span></a>
+          }
         </nav>
       </aside>
 

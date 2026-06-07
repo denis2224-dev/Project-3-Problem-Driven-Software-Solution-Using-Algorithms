@@ -14,6 +14,7 @@ import com.unischeduler.domain.Professor;
 import com.unischeduler.domain.ProfessorPreference;
 import com.unischeduler.domain.Timeslot;
 import com.unischeduler.domain.enumeration.ProfessorPreferenceType;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.ProfessorPreferenceRepository;
 import com.unischeduler.service.ProfessorPreferenceService;
 import com.unischeduler.service.dto.ProfessorPreferenceDTO;
@@ -43,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class ProfessorPreferenceResourceIT {
 
     private static final ProfessorPreferenceType DEFAULT_PREFERENCE_TYPE = ProfessorPreferenceType.PREFERRED;

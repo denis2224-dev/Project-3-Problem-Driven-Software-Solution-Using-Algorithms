@@ -66,6 +66,11 @@ public class SecurityConfiguration {
                     .requestMatchers("/api/account/reset-password/init").permitAll()
                     .requestMatchers("/api/account/reset-password/finish").permitAll()
                     .requestMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                    .requestMatchers("/api/demo-data/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                    .requestMatchers(HttpMethod.POST, adminWritableApiPaths()).hasAuthority(AuthoritiesConstants.ADMIN)
+                    .requestMatchers(HttpMethod.PUT, adminWritableApiPaths()).hasAuthority(AuthoritiesConstants.ADMIN)
+                    .requestMatchers(HttpMethod.PATCH, adminWritableApiPaths()).hasAuthority(AuthoritiesConstants.ADMIN)
+                    .requestMatchers(HttpMethod.DELETE, adminWritableApiPaths()).hasAuthority(AuthoritiesConstants.ADMIN)
                     .requestMatchers("/api/**").authenticated()
                     .requestMatchers("/v3/api-docs/**").hasAuthority(AuthoritiesConstants.ADMIN)
                     .requestMatchers("/management/health").permitAll()
@@ -82,5 +87,28 @@ public class SecurityConfiguration {
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
         return http.build();
+    }
+
+    private String[] adminWritableApiPaths() {
+        return new String[] {
+            "/api/faculties/**",
+            "/api/departments/**",
+            "/api/buildings/**",
+            "/api/rooms/**",
+            "/api/professors/**",
+            "/api/student-groups/**",
+            "/api/courses/**",
+            "/api/course-events/**",
+            "/api/timeslots/**",
+            "/api/professor-preferences/**",
+            "/api/solver-jobs/**",
+            "/api/timetables/**",
+            "/api/timetable-versions/**",
+            "/api/timetable-entries/**",
+            "/api/schedule-conflicts/**",
+            "/api/exams/**",
+            "/api/exam-schedule-entries/**",
+            "/api/authorities/**",
+        };
     }
 }

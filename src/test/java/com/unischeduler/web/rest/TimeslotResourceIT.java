@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Timeslot;
 import com.unischeduler.domain.enumeration.AcademicDayOfWeek;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.TimeslotRepository;
 import com.unischeduler.service.dto.TimeslotDTO;
 import com.unischeduler.service.mapper.TimeslotMapper;
@@ -32,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class TimeslotResourceIT {
 
     private static final AcademicDayOfWeek DEFAULT_DAY_OF_WEEK = AcademicDayOfWeek.MONDAY;

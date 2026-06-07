@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Timetable;
 import com.unischeduler.domain.TimetableVersion;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.TimetableVersionRepository;
 import com.unischeduler.service.TimetableVersionService;
 import com.unischeduler.service.dto.TimetableVersionDTO;
@@ -43,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class TimetableVersionResourceIT {
 
     private static final Integer DEFAULT_VERSION_NUMBER = 1;

@@ -23,12 +23,25 @@
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed()">
       <ul class="navbar-nav ms-auto">
         @if (accountRef !== null) {
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/demo-scenario" routerLinkActive="active" (click)="collapseNavbar()">Generate</a>
-          </li>
+          @if (isAdmin()) {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/demo-scenario" routerLinkActive="active" (click)="collapseNavbar()">Generate</a>
+            </li>
+          }
           <li class="nav-item">
             <a class="nav-link" routerLink="/timetable-view" routerLinkActive="active" (click)="collapseNavbar()">Timetable</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/exam-schedule" routerLinkActive="active" (click)="collapseNavbar()">Exams</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/algorithms" routerLinkActive="active" (click)="collapseNavbar()">Algorithms</a>
+          </li>
+          @if (isAdmin()) {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin/health" routerLinkActive="active" (click)="collapseNavbar()">Admin</a>
+            </li>
+          }
         } @else {
           <li class="nav-item">
             <a class="nav-link" routerLink="/" fragment="solution" (click)="collapseNavbar()">Solution</a>

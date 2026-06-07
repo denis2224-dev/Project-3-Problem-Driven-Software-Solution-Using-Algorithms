@@ -15,6 +15,7 @@ import com.unischeduler.domain.ExamScheduleEntry;
 import com.unischeduler.domain.Room;
 import com.unischeduler.domain.Timeslot;
 import com.unischeduler.domain.TimetableVersion;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.ExamScheduleEntryRepository;
 import com.unischeduler.service.ExamScheduleEntryService;
 import com.unischeduler.service.dto.ExamScheduleEntryDTO;
@@ -44,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class ExamScheduleEntryResourceIT {
 
     private static final String ENTITY_API_URL = "/api/exam-schedule-entries";

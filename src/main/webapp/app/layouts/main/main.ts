@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, OnInit, Renderer2, RendererFactory2, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, OnInit, Renderer2, RendererFactory2, computed, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
@@ -6,6 +6,7 @@ import dayjs from 'dayjs/esm';
 
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import { AccountService } from 'app/core/auth/account.service';
+import { Authority } from 'app/shared/jhipster/constants';
 import Footer from '../footer/footer';
 import PageRibbon from '../profiles/page-ribbon';
 
@@ -18,6 +19,7 @@ import PageRibbon from '../profiles/page-ribbon';
 })
 export default class Main implements OnInit {
   readonly account = inject(AccountService).account;
+  readonly isAdmin = computed(() => this.account()?.authorities.includes(Authority.ADMIN) ?? false);
 
   private readonly renderer: Renderer2;
   private readonly htmlElement: HTMLElement;

@@ -10,8 +10,11 @@
 
       <div class="hero-actions">
         @if (account() !== null) {
-          <a class="neon-button primary" routerLink="/demo-scenario">Generate timetable</a>
+          @if (isAdmin()) {
+            <a class="neon-button primary" routerLink="/demo-scenario">Generate timetable</a>
+          }
           <a class="neon-button ghost" routerLink="/timetable-view">View timetable</a>
+          <a class="neon-button ghost" routerLink="/exam-schedule">View exams</a>
         } @else {
           <button class="neon-button primary" type="button" (click)="login()">Sign in</button>
         }
@@ -22,11 +25,19 @@
   @if (account() !== null) {
     <div class="metric-grid compact-metrics">
       @for (metric of metrics(); track metric.label) {
-        <a class="metric-card" [routerLink]="metric.route">
-          <span class="metric-label">{{ metric.label }}</span>
-          <strong>{{ metric.value }}</strong>
-          <span class="metric-detail">{{ metric.detail }}</span>
-        </a>
+        @if (isAdmin()) {
+          <a class="metric-card" [routerLink]="metric.route">
+            <span class="metric-label">{{ metric.label }}</span>
+            <strong>{{ metric.value }}</strong>
+            <span class="metric-detail">{{ metric.detail }}</span>
+          </a>
+        } @else {
+          <article class="metric-card">
+            <span class="metric-label">{{ metric.label }}</span>
+            <strong>{{ metric.value }}</strong>
+            <span class="metric-detail">{{ metric.detail }}</span>
+          </article>
+        }
       }
     </div>
 
@@ -66,7 +77,13 @@
 
         <p class="job-message">{{ job.message ?? 'No solver message available.' }}</p>
       } @else {
-        <p class="empty-state">No solver job exists yet. Load demo data and generate a timetable from the solver page.</p>
+        @if (isAdmin()) {
+          <p class="empty-state">No solver job exists yet. Load demo data and generate a timetable from the solver page.</p>
+        } @else {
+          <p class="empty-state">
+            No published timetable is available yet. Ask an administrator to load demo data and generate a timetable.
+          </p>
+        }
       }
     </article>
 

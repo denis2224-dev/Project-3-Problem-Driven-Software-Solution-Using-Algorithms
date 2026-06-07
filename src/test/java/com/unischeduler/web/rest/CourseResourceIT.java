@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Course;
 import com.unischeduler.domain.Department;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.CourseRepository;
 import com.unischeduler.service.CourseService;
 import com.unischeduler.service.dto.CourseDTO;
@@ -41,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class CourseResourceIT {
 
     private static final String DEFAULT_CODE = "AAAAAAAAAA";

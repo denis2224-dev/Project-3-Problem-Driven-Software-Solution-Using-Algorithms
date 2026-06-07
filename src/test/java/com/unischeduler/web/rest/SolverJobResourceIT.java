@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.SolverJob;
 import com.unischeduler.domain.enumeration.SolverJobStatus;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.SolverJobRepository;
 import com.unischeduler.service.dto.SolverJobDTO;
 import com.unischeduler.service.mapper.SolverJobMapper;
@@ -34,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class SolverJobResourceIT {
 
     private static final SolverJobStatus DEFAULT_STATUS = SolverJobStatus.CREATED;

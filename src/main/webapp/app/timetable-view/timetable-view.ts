@@ -6,6 +6,8 @@ import { RouterLink } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { Authority } from 'app/shared/jhipster/constants';
 
 interface TimetableVersionOption {
   id: number;
@@ -58,6 +60,8 @@ export default class TimetableView implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly actionMessage = signal<string | null>(null);
+  readonly account = inject(AccountService).account;
+  readonly isAdmin = computed(() => this.account()?.authorities.includes(Authority.ADMIN) ?? false);
 
   readonly selectedVersion = computed(() => this.versions().find(version => version.id === this.selectedVersionId()) ?? null);
   readonly timeRows = computed<TimeRow[]>(() => {
@@ -184,6 +188,10 @@ export default class TimetableView implements OnInit {
   }
 
   private updateTimetableStatus(timetableId: number | null | undefined, action: 'approve' | 'publish'): void {
+    if (!this.isAdmin()) {
+      this.error.set('Only administrators can approve or publish timetables.');
+      return;
+    }
     if (!timetableId) {
       this.error.set('The selected version is not linked to a timetable.');
       return;

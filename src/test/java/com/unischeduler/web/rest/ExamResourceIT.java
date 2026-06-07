@@ -13,6 +13,7 @@ import com.unischeduler.IntegrationTest;
 import com.unischeduler.domain.Course;
 import com.unischeduler.domain.Exam;
 import com.unischeduler.domain.StudentGroup;
+import com.unischeduler.security.AuthoritiesConstants;
 import com.unischeduler.repository.ExamRepository;
 import com.unischeduler.service.ExamService;
 import com.unischeduler.service.dto.ExamDTO;
@@ -42,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 class ExamResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
