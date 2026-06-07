@@ -40,6 +40,11 @@ const routes: Routes = [
     title: 'login.title',
   },
   {
+    path: 'mobile-demo',
+    loadComponent: () => import('./mobile-demo/mobile-demo'),
+    title: 'Mobile QR Demo',
+  },
+  {
     path: 'algorithms',
     loadComponent: () => import('./algorithm-explanation/algorithm-explanation'),
     title: 'Algorithm Explanation',

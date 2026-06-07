@@ -53,6 +53,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      args:
+        PUBLIC_DEMO_URL: ${PUBLIC_DEMO_URL:-}
     image: unischeduler-frontend:local
     ports:
       - '127.0.0.1:${FRONTEND_PORT:-4200}:80'

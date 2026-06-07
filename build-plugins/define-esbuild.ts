@@ -19,6 +19,7 @@ export default (builderOptions: ApplicationBuilderOptions, _target: Target): Plu
 
   builderOptions.define ??= {};
   builderOptions.define.__VERSION__ = JSON.stringify(process.env.APP_VERSION ?? 'unknown');
+  builderOptions.define.__PUBLIC_DEMO_URL__ = JSON.stringify(process.env.PUBLIC_DEMO_URL ?? '');
 
   return {
     name: 'define:vars',

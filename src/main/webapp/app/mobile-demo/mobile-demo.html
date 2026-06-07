@@ -1,0 +1,71 @@
+<section class="mobile-demo-page">
+  <div class="mobile-demo-shell">
+    <section class="mobile-demo-copy" aria-labelledby="mobile-demo-title">
+      <p class="mobile-demo-eyebrow">Mobile QR demo</p>
+      <h1 id="mobile-demo-title">Open UniScheduler on your phone.</h1>
+      <p class="mobile-demo-lead">Scan the QR code to open UniScheduler on your phone, sign in, and view the university scheduling demo.</p>
+
+      <div class="mobile-demo-status" [class.is-fallback]="!usesConfiguredUrl">
+        @if (usesConfiguredUrl) {
+          <span>QR target uses PUBLIC_DEMO_URL</span>
+        } @else {
+          <span>PUBLIC_DEMO_URL is not set. The QR uses the current browser origin.</span>
+        }
+      </div>
+
+      <div class="mobile-demo-actions">
+        <a class="mobile-demo-button primary" [href]="demoUrl">Open demo URL</a>
+        <a class="mobile-demo-button secondary" routerLink="/login">Login</a>
+      </div>
+    </section>
+
+    <section class="mobile-demo-card" aria-label="QR code and demo access">
+      <div class="qr-panel">
+        @if (qrCodeDataUrl()) {
+          <img [src]="qrCodeDataUrl()" alt="QR code for the UniScheduler public demo URL" />
+        } @else if (qrCodeError()) {
+          <div class="qr-placeholder error">QR unavailable</div>
+        } @else {
+          <div class="qr-placeholder">Generating QR...</div>
+        }
+      </div>
+
+      <div class="demo-url-block">
+        <span>Demo URL</span>
+        <strong>{{ demoUrl }}</strong>
+        <button type="button" class="copy-link" (click)="copyDemoUrl()">
+          @if (copied()) {
+            Copied
+          } @else {
+            Copy URL
+          }
+        </button>
+      </div>
+
+      <div class="credentials-grid">
+        @for (credential of credentials; track credential.username) {
+          <article class="credential-card">
+            <h2>{{ credential.label }}</h2>
+            <dl>
+              <div>
+                <dt>Username</dt>
+                <dd>{{ credential.username }}</dd>
+              </div>
+              <div>
+                <dt>Password</dt>
+                <dd>{{ credential.password }}</dd>
+              </div>
+            </dl>
+            <p>{{ credential.note }}</p>
+          </article>
+        }
+      </div>
+
+      <ol class="mobile-demo-steps">
+        <li>Start the public demo URL through production hosting or a tunnel.</li>
+        <li>Open this page and show the QR code to the audience.</li>
+        <li>Users scan the QR code, log in, and open the dashboard or timetable.</li>
+      </ol>
+    </section>
+  </div>
+</section>

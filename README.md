@@ -176,6 +176,91 @@ Default JHipster accounts:
 - Admin: `admin` / `admin`
 - User: `user` / `user`
 
+## Mobile QR Demo
+
+The app includes a public mobile demo page at:
+
+```text
+/mobile-demo
+```
+
+It displays the configured demo URL, a generated QR code, demo credentials, and short phone instructions. The QR code points to `PUBLIC_DEMO_URL` when that variable is provided at frontend build time. If it is not set, the page falls back to the current browser origin, which is useful when opening the app through a tunnel URL.
+
+Demo credentials for local/university demonstrations:
+
+- Read-only demo user: `user` / `user`
+- Admin demo account: `admin` / `admin`
+
+Do not use these demo credentials for production or shared infrastructure.
+
+### A. Local Tunnel Demo
+
+1. Copy the environment template:
+
+```bash
+cp .env.example .env
+```
+
+2. Start the Docker stack:
+
+```bash
+docker compose up --build
+```
+
+3. Start a public HTTPS tunnel to the frontend container:
+
+```bash
+ngrok http 4200
+```
+
+Or with Cloudflare Tunnel:
+
+```bash
+cloudflared tunnel --url http://localhost:4200
+```
+
+4. Copy the generated public HTTPS URL, for example:
+
+```text
+https://unischeduler-demo.ngrok.app
+```
+
+5. Set `PUBLIC_DEMO_URL` in `.env`:
+
+```bash
+PUBLIC_DEMO_URL=https://unischeduler-demo.ngrok.app
+```
+
+6. Rebuild the frontend container so Angular embeds the URL:
+
+```bash
+docker compose up --build frontend
+```
+
+7. Open:
+
+```text
+https://unischeduler-demo.ngrok.app/mobile-demo
+```
+
+8. Show the QR code. Users scan it, open UniScheduler on their phones, and log in with the demo credentials.
+
+Recommended setup: expose the nginx frontend URL through the tunnel. The nginx container proxies `/api` to the backend from the same public origin, which avoids browser CORS problems on mobile devices.
+
+### B. Production Deployment
+
+1. Deploy the frontend, backend, and PostgreSQL database.
+2. Prefer serving Angular and the Spring Boot API from the same public HTTPS origin, with `/api` reverse-proxied to the backend.
+3. Set `PUBLIC_DEMO_URL` to the production URL before building the frontend:
+
+```bash
+PUBLIC_DEMO_URL=https://your-production-domain.example npm run webapp:build:prod
+```
+
+4. Open `/mobile-demo` on the deployed site and verify that the QR code points to the production URL.
+
+More detailed instructions are available in [Mobile Demo](docs/mobile-demo.md).
+
 ## How To Load Demo Data
 
 Use the UI:
@@ -248,6 +333,7 @@ Screenshots should be added before final presentation:
 - [Algorithms](docs/algorithms.md)
 - [Demo Script](docs/demo-script.md)
 - [API Overview](docs/api-overview.md)
+- [Mobile QR Demo](docs/mobile-demo.md)
 
 ## Future Improvements
 

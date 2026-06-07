@@ -3,6 +3,9 @@
 FROM node:24.16.0-alpine AS build
 WORKDIR /workspace
 
+ARG PUBLIC_DEMO_URL=
+ENV PUBLIC_DEMO_URL=${PUBLIC_DEMO_URL}
+
 COPY package.json package-lock.json ./
 COPY angular.json tsconfig*.json ngsw-config.json ./
 COPY build-plugins ./build-plugins

@@ -51,6 +51,7 @@
             ],
             "styles": ["src/main/webapp/content/scss/vendor.scss", "src/main/webapp/content/scss/global.scss"],
             "scripts": [],
+            "allowedCommonJsDependencies": ["qrcode"],
             "define": {
               "SERVER_API_URL": "''"
             }
