@@ -30,10 +30,11 @@ export default class Navbar implements OnInit {
 
   constructor() {
     const { VERSION } = environment;
-    if (VERSION) {
-      this.version = VERSION.toLowerCase().startsWith('v') ? VERSION : `v${VERSION}`;
+    const normalizedVersion = VERSION.trim();
+    if (normalizedVersion && normalizedVersion.toLowerCase() !== 'unknown') {
+      this.version = normalizedVersion.toLowerCase().startsWith('v') ? normalizedVersion : `v${normalizedVersion}`;
     } else {
-      this.version = '';
+      this.version = 'v1.0';
     }
   }
 

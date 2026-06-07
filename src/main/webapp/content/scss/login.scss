@@ -1,0 +1,465 @@
+jhi-login {
+  display: block;
+  min-width: 0;
+}
+
+jhi-login .login-page {
+  position: relative;
+  min-height: calc(100vh - 4.25rem);
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background:
+    radial-gradient(circle at 78% 36%, rgba(168, 85, 247, 0.18), transparent 24rem),
+    radial-gradient(circle at 18% 18%, rgba(34, 211, 238, 0.08), transparent 20rem),
+    linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px), #07070f;
+  background-size:
+    auto,
+    auto,
+    46px 46px,
+    46px 46px,
+    auto;
+}
+
+jhi-login .login-page::before {
+  content: '';
+  position: absolute;
+  inset: 12% 8% auto auto;
+  width: 24rem;
+  height: 24rem;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.22), transparent 62%);
+  filter: blur(18px);
+}
+
+jhi-login .login-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(22rem, 28.75rem);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  width: min(100%, 70rem);
+  min-height: calc(100vh - 10rem);
+  margin: 0 auto;
+}
+
+jhi-login .login-brand-panel,
+jhi-login .login-card {
+  min-width: 0;
+}
+
+jhi-login .login-brand-panel {
+  max-width: 34rem;
+}
+
+jhi-login .login-eyebrow {
+  margin: 0 0 0.75rem;
+  color: #c084fc;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+jhi-login .login-brand-panel h1 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: clamp(2.35rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+}
+
+jhi-login .login-subtitle {
+  max-width: 29rem;
+  margin: 1rem 0 0;
+  color: #f8fafc;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+jhi-login .login-lead {
+  max-width: 31rem;
+  margin: 0.85rem 0 0;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+jhi-login .login-visual {
+  position: relative;
+  width: min(100%, 27rem);
+  margin-top: 2rem;
+  padding: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 1.15rem;
+  background: rgba(17, 17, 31, 0.68);
+  box-shadow: 0 1rem 3.5rem rgba(0, 0, 0, 0.26);
+}
+
+jhi-login .visual-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+jhi-login .grid-slot {
+  display: block;
+  min-height: 2.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 0.7rem;
+  background: rgba(8, 8, 20, 0.86);
+}
+
+jhi-login .grid-slot-wide {
+  grid-column: span 2;
+}
+
+jhi-login .grid-slot-active {
+  border-color: rgba(168, 85, 247, 0.45);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.24), rgba(126, 34, 206, 0.12));
+}
+
+jhi-login .grid-slot-cyan {
+  border-color: rgba(34, 211, 238, 0.36);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(8, 8, 20, 0.9));
+}
+
+jhi-login .graph-visual {
+  position: absolute;
+  right: 1rem;
+  bottom: 3.9rem;
+  width: 7rem;
+  height: 5rem;
+  opacity: 0.92;
+}
+
+jhi-login .graph-node,
+jhi-login .graph-line {
+  position: absolute;
+  display: block;
+}
+
+jhi-login .graph-node {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  box-shadow: 0 0 1rem rgba(168, 85, 247, 0.35);
+}
+
+jhi-login .node-purple {
+  top: 0.4rem;
+  left: 0.45rem;
+  background: #a855f7;
+}
+
+jhi-login .node-cyan {
+  top: 2.25rem;
+  right: 0.75rem;
+  background: #22d3ee;
+}
+
+jhi-login .node-muted {
+  bottom: 0.55rem;
+  left: 2.9rem;
+  background: #94a3b8;
+}
+
+jhi-login .graph-line {
+  height: 1px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.68), rgba(34, 211, 238, 0.45));
+}
+
+jhi-login .graph-line-one {
+  top: 1.25rem;
+  left: 1.05rem;
+  width: 5.4rem;
+  transform: rotate(26deg);
+}
+
+jhi-login .graph-line-two {
+  top: 3rem;
+  left: 3.25rem;
+  width: 3.1rem;
+  transform: rotate(-36deg);
+}
+
+jhi-login .pipeline-visual {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 1rem;
+  color: #94a3b8;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+jhi-login .pipeline-visual span {
+  min-width: 0;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 999px;
+  background: rgba(8, 8, 20, 0.72);
+}
+
+jhi-login .pipeline-visual i {
+  width: 1.15rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.8), rgba(34, 211, 238, 0.5));
+}
+
+jhi-login .login-card {
+  width: 100%;
+  max-width: 28.75rem;
+  padding: clamp(1.6rem, 3vw, 2rem);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 1.125rem;
+  background: linear-gradient(180deg, rgba(23, 23, 42, 0.96), rgba(17, 17, 31, 0.96));
+  box-shadow: 0 1.25rem 4rem rgba(0, 0, 0, 0.34);
+}
+
+jhi-login .login-card-header {
+  margin-bottom: 1.45rem;
+}
+
+jhi-login .login-card-header h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1.55rem;
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+
+jhi-login .login-card-header p:last-child {
+  margin: 0.35rem 0 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+jhi-login .login-error {
+  margin-bottom: 1rem;
+  padding: 0.75rem 0.85rem;
+  overflow-wrap: break-word;
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  border-radius: 0.75rem;
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.22);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+jhi-login .login-form {
+  display: grid;
+  gap: 0.95rem;
+}
+
+jhi-login .login-field {
+  min-width: 0;
+}
+
+jhi-login .login-field label {
+  display: block;
+  margin-bottom: 0.38rem;
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+jhi-login .login-input {
+  width: 100%;
+  height: 2.75rem;
+  min-width: 0;
+  padding: 0 0.85rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 0.65rem;
+  outline: none;
+  color: #f8fafc;
+  background: #080814;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+jhi-login .login-input::placeholder {
+  color: rgba(148, 163, 184, 0.58);
+}
+
+jhi-login .login-input:focus {
+  border-color: rgba(168, 85, 247, 0.72);
+  background: #090918;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.16);
+}
+
+jhi-login .login-input.ng-valid,
+jhi-login .login-input.ng-invalid {
+  border-left-width: 1px;
+}
+
+jhi-login .login-options {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  margin-top: -0.1rem;
+}
+
+jhi-login .remember-line {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+jhi-login .login-checkbox {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin: 0;
+  accent-color: #a855f7;
+}
+
+jhi-login .login-text-link,
+jhi-login .login-register a {
+  color: #c084fc;
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+jhi-login .login-text-link {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+jhi-login .login-text-link:hover,
+jhi-login .login-register a:hover {
+  color: #f8fafc;
+}
+
+jhi-login .login-submit {
+  width: 100%;
+  height: 2.75rem;
+  margin-top: 0.2rem;
+  border: 0;
+  border-radius: 0.65rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  box-shadow: 0 0.85rem 2rem rgba(168, 85, 247, 0.22);
+  font-size: 0.9rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+jhi-login .login-submit:hover {
+  box-shadow: 0 1rem 2.4rem rgba(168, 85, 247, 0.32);
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+jhi-login .login-submit:active {
+  transform: translateY(0);
+}
+
+jhi-login .login-register {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  margin: 1.15rem 0 0;
+  color: #94a3b8;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 920px) {
+  jhi-login .login-page {
+    padding: 1.25rem;
+  }
+
+  jhi-login .login-shell {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    min-height: auto;
+  }
+
+  jhi-login .login-brand-panel {
+    max-width: 34rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  jhi-login .login-lead,
+  jhi-login .login-subtitle {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  jhi-login .login-visual {
+    width: min(100%, 22rem);
+    margin: 1.25rem auto 0;
+  }
+
+  jhi-login .login-card {
+    max-width: 28.75rem;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 560px) {
+  jhi-login .login-page {
+    min-height: calc(100vh - 3.75rem);
+    padding: 1rem;
+  }
+
+  jhi-login .login-brand-panel h1 {
+    font-size: clamp(2.1rem, 14vw, 2.8rem);
+  }
+
+  jhi-login .login-subtitle {
+    font-size: 0.98rem;
+  }
+
+  jhi-login .login-lead {
+    font-size: 0.88rem;
+  }
+
+  jhi-login .login-visual {
+    display: none;
+  }
+
+  jhi-login .login-card {
+    padding: 1.35rem;
+  }
+
+  jhi-login .login-options {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  jhi-login .login-text-link {
+    text-align: left;
+    white-space: normal;
+  }
+}
